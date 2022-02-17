@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('cheks', function (Blueprint $table) {
             $table->id();
-            $table->string('profile', ['admin', 'user']);
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->boolean('active')->default(1);
-            $table->rememberToken();
+            $table->string('cpf_cnpj');
+            $table->integer('id_client');
+            $table->timestamp('date_chek');
+            $table->timestamp('date_pay');
+            $table->timestamp('date_pai_out');
+            $table->string('situation', ['late','' ,'returned', 'paied']);
         });
     }
 
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('cheks');
     }
 };
