@@ -19,9 +19,9 @@ return new class extends Migration
             $table->integer('id_product');
             $table->string('name_product');
             $table->string('bar_code', 50);
-            $table->bigInteger('qdt')->default(1);
-            $table->decimal('value', 19,2)->default(0.0000);
-            $table->string('item_number', 5);
+            $table->bigInteger('qdt');
+            $table->integer('value');
+            $table->string('number_item', 5);
         });
     }
 

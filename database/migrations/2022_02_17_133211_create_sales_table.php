@@ -23,10 +23,10 @@ return new class extends Migration
             $table->string('type_sale', ['in_cash', 'on_term']);
             $table->timestamp('due_date');
             $table->timestamp('pay_date');
-            $table->decimal('chek', 19,2)->default(0.0000);
-            $table->decimal('cash', 19,2)->default(0.0000);
-            $table->decimal('card', 19,2)->default(0.0000);
-            $table->decimal('total_sale', 19,2)->default(0.0000);
+            $table->integer('chek')->nullable()->default(0);
+            $table->integer('cash')->nullable()->default(0);
+            $table->integer('card')->nullable()->default(0);
+            $table->integer('total_sale')->nullable()->default(0);
         });
     }
 
