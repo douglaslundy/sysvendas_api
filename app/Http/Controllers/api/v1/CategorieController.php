@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Models\Categorie;
+use App\Http\Requests\CategorieRequest;
+
 class CategorieController extends Controller
 {
     /**
@@ -14,7 +17,7 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        //
+        return Categorie::all();
     }
 
     /**
@@ -23,9 +26,9 @@ class CategorieController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategorieRequest $request)
     {
-        //
+        return Categorie::create($request->all());
     }
 
     /**
@@ -36,29 +39,30 @@ class CategorieController extends Controller
      */
     public function show($id)
     {
-        //
+        return Categorie::find($id) ? Categorie::find($id) : ['error' => '404'];
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Categorie  $categorie
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategorieRequest $request, Categorie  $categorie)
     {
-        //
+       $categorie->update($request->all());
+       return $categorie;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Categorie  $categorie
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Categorie $categorie)
     {
-        //
+        return $categorie->delete($categorie);
     }
 }

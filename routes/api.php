@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\v1\ClientController;
 use App\Http\Controllers\api\v1\SaleController;
 use App\Http\Controllers\api\v1\CartController;
-
-
+use App\Http\Controllers\Api\V1\CategorieController;
+use App\Http\Controllers\Api\V1\CompanyController;
 
 Route::get('/ping', function(){
     return ['pong' => true];
@@ -20,8 +20,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     Route::apiResource('/', ClientController::class);
 // });
 
-
+Route::apiResource('company', CompanyController::class);
 Route::apiResource('clients', ClientController::class);
+Route::apiResource('categorie', CategorieController::class);
 Route::apiResource('carts', CartController::class);
 // Route::apiResource('sales', SaleController::class);
 // Route::apiResource('adress', AddressController::class);

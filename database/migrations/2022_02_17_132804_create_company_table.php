@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('company', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->string('social', 100);
-            $table->string('cnpj_cpj', 18)->unique();
+            $table->string('social', 100)->nullable();
+            $table->string('cnpj_cpj', 18)->unique()->nullable();
             $table->string('ie', 18)->unique()->nullable();
             $table->string('im', 18)->unique()->nullable();
             $table->integer('balance')->nullable()->default(0);
-            $table->timestamp('validate');
+            $table->timestamp('validate')->nullable();
             $table->boolean('active')->nullable()->default(1);
         });
     }
