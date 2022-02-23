@@ -11,5 +11,5 @@ class Product extends Model
 
     public $timestamps = false;
     protected $fillable =
-    [''];
+    ['name', 'bar_code', 'id_unity', 'id_category', 'cost_value', 'sale_value', 'stock', 'active'];
 }

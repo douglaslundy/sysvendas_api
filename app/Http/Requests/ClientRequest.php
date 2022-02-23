@@ -28,7 +28,7 @@ class ClientRequest extends FormRequest
         return [
              'full_name' => [new CheckIfFullName,'string', 'required','min:5','max:100'],
              'surname' => 'nullable|string|max:50',
-             'cpf_cnpj' => ['nullable','string', 'max:18'],
+             'cpf_cnpj' => ['nullable','string','unique:clients', 'max:18'],
              'email' =>['string','nullable','email', 'max:100'],
              'phone' => [new PhoneValidation],
              'im' => ['string','nullable', 'unique:clients', 'max:50'],

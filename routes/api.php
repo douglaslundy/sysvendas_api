@@ -7,6 +7,7 @@ use App\Http\Controllers\api\v1\SaleController;
 use App\Http\Controllers\api\v1\CartController;
 use App\Http\Controllers\Api\V1\CategorieController;
 use App\Http\Controllers\Api\V1\CompanyController;
+use App\Http\Controllers\Api\V1\ProductController;
 
 Route::get('/ping', function(){
     return ['pong' => true];
@@ -24,11 +25,12 @@ Route::apiResource('company', CompanyController::class);
 Route::apiResource('clients', ClientController::class);
 Route::apiResource('categorie', CategorieController::class);
 Route::apiResource('carts', CartController::class);
+Route::apiResource('products', ProductController::class);
 // Route::apiResource('sales', SaleController::class);
 // Route::apiResource('adress', AddressController::class);
 // Route::apiResource('units', UnitController::class);
 // Route::apiResource('categories', CategorieController::class);
-// Route::apiResource('produtcts', ProductController::class);
+//
 // Route::apiResource('cheks', ChekController::class);
 // Route::apiResource('company', CompanyController::class);
 
