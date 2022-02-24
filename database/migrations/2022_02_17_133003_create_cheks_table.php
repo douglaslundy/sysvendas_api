@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use phpDocumentor\Reflection\Types\Nullable;
 
 return new class extends Migration
 {
@@ -15,11 +16,12 @@ return new class extends Migration
     {
         Schema::create('cheks', function (Blueprint $table) {
             $table->id();
-            $table->string('cpf_cnpj');
+            $table->string('cpf_cnpj_chek', 18);
+            $table->integer('check_number');
             $table->integer('id_client');
             $table->timestamp('date_chek');
-            $table->timestamp('date_pay');
-            $table->timestamp('date_pai_out');
+            $table->timestamp('date_pay')->nullable();
+            $table->timestamp('date_pay_out')->nullable();
             $table->string('situation', ['late','' ,'returned', 'paied']);
         });
     }

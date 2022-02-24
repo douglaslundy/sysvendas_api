@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('city', 50);
             $table->string('street', 100);
             $table->string('number', 6);
-            $table->string('zip_code', 10);
+            $table->string('zip_code', 10)->nullable();
             $table->string('district', 100);
             $table->string('complement', 50)->nullable();
             $table->integer('id_client');

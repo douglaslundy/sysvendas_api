@@ -21,12 +21,12 @@ return new class extends Migration
             $table->string('paied', ['yes', 'no']);
             // in_cash = 'a vista'| on_term = 'a prazo'
             $table->string('type_sale', ['in_cash', 'on_term']);
-            $table->timestamp('due_date');
-            $table->timestamp('pay_date');
+            $table->timestamp('due_date')->nullable();
+            $table->timestamp('pay_date')->nullable();
             $table->integer('chek')->nullable()->default(0);
             $table->integer('cash')->nullable()->default(0);
             $table->integer('card')->nullable()->default(0);
-            $table->integer('total_sale')->nullable()->default(0);
+            $table->integer('total_sale')->default(0);
         });
     }
 

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Sale;
+
+use App\Http\Requests\SaleRequest;
 
 class SaleController extends Controller
 {
@@ -14,7 +17,7 @@ class SaleController extends Controller
      */
     public function index()
     {
-        return 'rota get sales';
+        return Sale::all();
     }
 
     /**
@@ -23,9 +26,9 @@ class SaleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaleRequest $request)
     {
-        return 'rota post sales';
+        return Sale::create($request->all());
     }
 
     /**
@@ -36,7 +39,7 @@ class SaleController extends Controller
      */
     public function show($id)
     {
-        //
+        return Sale::find($id) ? Sale::find($id) : ['error' => '404'];
     }
 
     /**
@@ -46,19 +49,19 @@ class SaleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(SaleRequest $request, $id)
     {
-        //
+        return ['error' => 'The sale don´t can upudated'];
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Sale  $sale
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Sale  $sale)
     {
-        //
+        return $sale->delete($sale);
     }
 }
