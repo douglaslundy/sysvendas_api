@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\CheckTotalSale;
+use App\Rules\IfInClients;
+use App\Rules\IfInUsers;
 
 class SaleRequest extends FormRequest
 {
@@ -25,11 +27,11 @@ class SaleRequest extends FormRequest
     public function rules()
     {
         return [
-            "id_user" => ['integer', 'required'],
-            "id_client" => ['integer', 'required'],
+            "id_user" => ['integer', 'required', new IfInUsers],
+            "id_client" => ['integer', 'required', new IfInClients],
             "sale_date" => ['date', 'required'],
-            "paied" => ['string', 'required'],
-            "type_sale" => ['string', 'required'],
+            "paied" => ['string', 'required', 'in:yes,no'],
+            "type_sale" => ['string', 'required', 'in:in_cash,on_term'],
             "due_date" => ['date', 'nullable'],
             "pay_date" => ['date', 'nullable'],
             "chek" => ['integer', 'nullable'],

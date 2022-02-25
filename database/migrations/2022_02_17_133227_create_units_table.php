@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->string('name', ['KG', 'UN', 'LT']);
+            $table->string('name', 'required', 3);
         });
     }
 

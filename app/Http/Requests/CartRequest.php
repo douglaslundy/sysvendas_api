@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\IfInProducts;
+use App\Rules\IfInUsers;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CartRequest extends FormRequest
@@ -24,8 +26,8 @@ class CartRequest extends FormRequest
     public function rules()
     {
         return [
-            "id_user" => ['integer', 'required'],
-            "id_product" => ['integer', 'required'],
+            "id_user" => ['integer', 'required', new IfInUsers],
+            "id_product" => ['integer', 'required',new  IfInProducts],
             "name_product" => ['string', 'required'],
             "bar_code" => ['string', 'max:50', 'required'],
             "qdt" => ['integer', 'required'],

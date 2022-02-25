@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AddressesRequest;
+use App\Models\Address;
 use Illuminate\Http\Request;
 
 class AddressController extends Controller
@@ -14,7 +16,7 @@ class AddressController extends Controller
      */
     public function index()
     {
-        //
+        return Address::all();
     }
 
     /**
@@ -23,9 +25,9 @@ class AddressController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddressesRequest $request)
     {
-        //
+        return Address::create($request->all());
     }
 
     /**

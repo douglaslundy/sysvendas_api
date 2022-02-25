@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('date_chek');
             $table->timestamp('date_pay')->nullable();
             $table->timestamp('date_pay_out')->nullable();
-            $table->string('situation', ['late','' ,'returned', 'paied']);
+            $table->string('situation', ['late','waiting' ,'returned', 'paied']);
         });
     }
 

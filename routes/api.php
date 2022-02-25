@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\V1\CategorieController;
 use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ChekController;
+use App\Http\Controllers\Api\V1\UnitController;
+use App\Http\Controllers\Api\V1\AddressController;
 
 Route::get('/ping', function(){
     return ['pong' => true];
@@ -29,11 +31,8 @@ Route::apiResource('carts', CartController::class);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('cheks', ChekController::class);
 Route::apiResource('sales', SaleController::class);
-// Route::apiResource('adress', AddressController::class);
-// Route::apiResource('units', UnitController::class);
-// Route::apiResource('categories', CategorieController::class);
-//
-// Route::apiResource('company', CompanyController::class);
+Route::apiResource('address', AddressController::class);
+Route::apiResource('units', UnitController::class);
 
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\IfInClients;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ChekRequest extends FormRequest
@@ -26,11 +27,11 @@ class ChekRequest extends FormRequest
         return [
             "cpf_cnpj_chek" => ['string', 'required','min:11', 'max:18'],
             "check_number" => ['integer', 'required'],
-            "id_client" => ['integer', 'required'],
+            "id_client" => ['integer', 'required', new IfInClients],
             "date_chek" => ['date'],
             "date_pay" => ['date', 'nullable'],
             "date_pay_out" => ['date', 'nullable'],
-            "situation" => ['required']
+            "situation" => ['required', 'in:,waiting,late,returned,paied']
         ];
     }
 }
