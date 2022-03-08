@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ClientRequest;
 use App\Models\Client;
+use DateTime;
 
 class ClientController extends Controller
 {
@@ -16,7 +17,8 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return Client::all();
+        // return Client::where('active', true)->get();
+        return Client::where('active', true)->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -27,7 +29,9 @@ class ClientController extends Controller
      */
     public function store(ClientRequest $request)
     {
-        return Client::create($request->all());
+        $array = ['status' => 'created'];
+        $array['client'] = Client::create($request->all());
+        return $array;
 
     }
 
@@ -39,7 +43,7 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        return Client::find($id) ? Client::find($id) : ['error' => '404'];
+        return Client::where('active', true)->find($id) ? Client::find($id) : ['error' => '404'];
     }
 
     /**
@@ -52,8 +56,11 @@ class ClientController extends Controller
     public function update(ClientRequest $request, Client $client)
     {
         // return Client::update($request->all());
+
+        $array = ['status' => 'updated'];
         $client->update($request->all());
-        return $client;
+        $array['client'] = $client;
+        return $array;
     }
 
     /**
@@ -64,6 +71,9 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        return $client->delete($client);
+        $array = ['status' => 'inactivated'];
+        // $client->delete($client);
+        Client::where('id', $client->id)->update(['active' => 0, 'inactive_date' => new DateTime()]);
+        return $array;
     }
 }
