@@ -28,11 +28,11 @@ class ClientRequest extends FormRequest
         return [
              'full_name' => [new CheckIfFullName,'string', 'required','min:5','max:100'],
              'surname' => 'nullable|string|max:50',
-             'cpf_cnpj' => ['nullable','string','unique:clients', 'max:18'],
+             'cpf_cnpj' => 'string|nullable|unique:clients,cpf_cnpj,'.request()->id, 'max:18',
              'email' =>['string','nullable','email', 'max:100'],
              'phone' => [new PhoneValidation],
-             'im' => ['string','nullable', 'unique:clients', 'max:50'],
-             'ie' => ['string','nullable', 'unique:clients', 'max:50'],
+             'im' => 'string|nullable|unique:clients,im,'.request()->id, 'max:50',
+             'ie' => 'string|nullable|unique:clients,ie,'.request()->id, 'max:50',
              'fantasy_name' => ['string','nullable', 'max:50'],
              'obs' => ['string','nullable', 'max:500'],
              'active' => ['Boolean'],
@@ -40,13 +40,18 @@ class ClientRequest extends FormRequest
              'debit_balance' => ['nullable', 'integer'],
              'limit' => ['nullable', 'integer'],
              'marked' => ['nullable','Boolean'],
+             //  'im' => ['string','nullable', 'unique:clients', 'max:50'],
+            //  'ie' => ['string','nullable', 'unique:clients', 'max:50'],
+            //  'cpf_cnpj' => ['nullable','string','unique:clients', 'max:18'],
         ];
     }
 
     // public function messages()
     // {
     //     return [
-    //         'first_name.required' => 'tem que ser preenchido',
+    //         'full_name.required' => 'o Campo nome e obrigatorio',
+    //         'full_name.min' =>'O Nome deve possuir no minimo 5 letras'
+
     //     ];
     // }
 }
