@@ -7,7 +7,7 @@ Contact:
 ##### Phone number and WhatsApp: (35) 984297193
 ##### https://www.linkedin.com/in/douglaslundy/
 
-Este aplicação é um projeto Back-End gestão de clientes, estoque e vendas, 
+Esta aplicação é um projeto Back-End, de gestão de clientes, estoque e vendas, 
 em desenvolvimento para o cliente JF ferragens, trata-se de uma API que visa prover dados 
 ao Front em NextJS, está API esta sendo desenvolvida nos moldes REST,  utilizando Laravel, 
 ORM Eloquente, SanctuM, Request Validator, onde a validação acontece em classes com responsabilidades 
