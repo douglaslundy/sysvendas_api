@@ -46,12 +46,11 @@ class ClientRequest extends FormRequest
         ];
     }
 
-    // public function messages()
-    // {
-    //     return [
-    //         'full_name.required' => 'o Campo nome e obrigatorio',
-    //         'full_name.min' =>'O Nome deve possuir no minimo 5 letras'
-
-    //     ];
-    // }
+    public function messages()
+    {
+        return [
+            'full_name.required' => 'o Campo nome e obrigatorio',
+            'full_name.min' =>'O Nome deve possuir no minimo 5 letras',
+        ];
+    }
 }

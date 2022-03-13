@@ -17,7 +17,8 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        return Categorie::all();
+        // return Categorie::all();
+        return  Categorie::where('active', true)->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -28,7 +29,9 @@ class CategorieController extends Controller
      */
     public function store(CategorieRequest $request)
     {
-        return Categorie::create($request->all());
+        $array = ['status' => 'created'];
+        $array['categorie'] = Categorie::create($request->all());
+        return $array;
     }
 
     /**
@@ -39,7 +42,7 @@ class CategorieController extends Controller
      */
     public function show($id)
     {
-        return Categorie::find($id) ? Categorie::find($id) : ['error' => '404'];
+        return Categorie::where('active', true)->find($id) ? Categorie::find($id) : ['error' => '404'];
     }
 
     /**
@@ -51,8 +54,10 @@ class CategorieController extends Controller
      */
     public function update(CategorieRequest $request, Categorie  $categorie)
     {
-       $categorie->update($request->all());
-       return $categorie;
+        $array = ['status' => 'updated'];
+        $categorie->update($request->all());
+        $array['categorie'] = $categorie;
+        return $array;
     }
 
     /**
@@ -63,6 +68,10 @@ class CategorieController extends Controller
      */
     public function destroy(Categorie $categorie)
     {
-        return $categorie->delete($categorie);
+        $array = ['status' => 'inactivated'];
+        // $client->delete($client);
+        Categorie::where('id', $categorie->id)->update(['active' => 0]);
+        return $array;
+
     }
 }

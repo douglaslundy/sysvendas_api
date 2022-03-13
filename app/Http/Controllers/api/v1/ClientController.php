@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ClientRequest;
 use App\Models\Client;
 use DateTime;
+use ErrorException;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ClientController extends Controller
 {
@@ -73,6 +76,12 @@ class ClientController extends Controller
     {
         $array = ['status' => 'inactivated'];
         // $client->delete($client);
+
+        if($client->debit_balance != 0){
+           throw new HttpException(304);
+
+        }
+
         Client::where('id', $client->id)->update(['active' => 0, 'inactive_date' => new DateTime()]);
         return $array;
     }

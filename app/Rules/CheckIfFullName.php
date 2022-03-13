@@ -35,6 +35,6 @@ class CheckIfFullName implements Rule
      */
     public function message()
     {
-        return 'The Full Name must be at least 2 words long!';
+        return 'O Nome deve possuir no minimo duas palavras';
     }
 }

@@ -27,7 +27,7 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        return Product::create($request->all());
+        return  Product::where('active', true)->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -38,7 +38,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        return Product::find($id) ? Product::find($id) : ['error' => '404'];
+        return Product::where('active', true)->find($id) ? Product::find($id) : ['error' => '404'];
     }
 
     /**
@@ -50,8 +50,10 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, Product  $product)
     {
+        $array = ['status' => 'updated'];
         $product->update($request->all());
-        return $product;
+        $array['product'] = $product;
+        return $array;
     }
 
     /**
@@ -62,6 +64,9 @@ class ProductController extends Controller
      */
     public function destroy(Product  $product)
     {
-        return $product->delete($product);
+
+        $array = ['status' => 'inactivated'];
+        Product::where('id', $product->id)->update(['active' => 0]);
+        return $array;
     }
 }
