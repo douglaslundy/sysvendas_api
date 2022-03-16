@@ -16,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::all();
+        return  Product::where('active', true)->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -27,7 +27,9 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        return  Product::where('active', true)->orderBy('id', 'desc')->get();
+        $array = ['status' => 'created'];
+        $array['product'] = Product::create($request->all());
+        return $array;
     }
 
     /**
