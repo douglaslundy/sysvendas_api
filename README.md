@@ -23,15 +23,15 @@ https://dlsistemas.os.srv.br/api
 
 ### com as seguintes rotas:
 
-/clients
-/categorie
-/products
-/units
-/company
-/carts
-/cheks
-/sales
-/address
+#### /clients
+#### /categorie
+#### /products
+#### /units
+#### /company
+#### /carts
+#### /cheks
+#### /sales
+#### /address
 
 
 
