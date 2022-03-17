@@ -28,7 +28,9 @@ class UnitController extends Controller
      */
     public function store(UnitRequest $request)
     {
-        return Unit::create($request->all());
+        $array = ['status' => 'created'];
+        $array['unit'] = Unit::create($request->all());
+        return $array;
     }
 
     /**
@@ -51,8 +53,10 @@ class UnitController extends Controller
      */
     public function update(UnitRequest $request, Unit $unit)
     {
+        $array = ['status' => 'updated'];
         $unit->update($request->all());
-        return $unit;
+        $array['unit'] = $unit;
+        return $array;
     }
 
     /**
@@ -63,6 +67,9 @@ class UnitController extends Controller
      */
     public function destroy(Unit  $unit)
     {
-        return $unit->delete($unit);
+        $array = ['status' => 'deleted'];
+        $array['unit'] = $unit->delete($unit);
+        return $array;
+
     }
 }

@@ -25,7 +25,7 @@ class UnitRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'max:3', new UpperCaseString],
+            'name' => ['required','min:1', 'max:3'],
         ];
     }
 }
