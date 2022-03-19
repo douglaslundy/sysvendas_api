@@ -26,5 +26,8 @@ class UnitSeeder extends Seeder
         DB::table('units')->insert([
             'name' => 'LT'
         ]);
+        DB::table('units')->insert([
+            'name' => 'PC'
+        ]);
     }
 }
