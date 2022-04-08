@@ -37,7 +37,7 @@ class SaleRequest extends FormRequest
             "chek" => ['integer', 'nullable'],
             "cash" => ['integer', 'nullable'],
             "card" => ['integer', 'nullable'],
-            "total_sale" => [new CheckTotalSale(request()->input("chek"), request()->input("cash"),request()->input("card"))],
+            "total_sale" => [new CheckTotalSale(request()->input("chek"), request()->input("cash"), request()->input("card"))],
         ];
     }
 }

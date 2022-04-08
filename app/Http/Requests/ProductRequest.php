@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ChekIfValueSaleIsBiggestThanValueCost;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductRequest extends FormRequest
@@ -29,7 +30,7 @@ class ProductRequest extends FormRequest
             'id_unity' => ['required', 'integer'],
             'id_category' => ['required', 'integer'],
             'cost_value' => ['required', 'integer'],
-            'sale_value' => ['required', 'integer'],
+            'sale_value' => [new ChekIfValueSaleIsBiggestThanValueCost(request()->input("cost_value")), 'required', 'integer'],
             'stock' => ['required', 'integer'],
             'active' => ['nullable', 'boolean'],
         ];

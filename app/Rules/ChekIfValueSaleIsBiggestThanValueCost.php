@@ -4,16 +4,17 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class PhoneValidation implements Rule
+class ChekIfValueSaleIsBiggestThanValueCost implements Rule
 {
+    private $cost_value;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($cost_value)
     {
-        //
+        $this->cost_value = $cost_value;
     }
 
     /**
@@ -25,7 +26,7 @@ class PhoneValidation implements Rule
      */
     public function passes($attribute, $value)
     {
-        return strlen($value) <= 20;
+        return ($value > $this->cost_value);
     }
 
     /**
@@ -35,6 +36,6 @@ class PhoneValidation implements Rule
      */
     public function message()
     {
-        return 'this field don´t must have at least 20 words.';
+        return 'O Valor de venda não pode ser menor que o valor de custo do produto';
     }
 }

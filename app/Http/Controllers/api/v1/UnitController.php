@@ -17,7 +17,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        return Unit::all();
+        return Unit::where('active', true)->get();
     }
 
     /**
@@ -41,7 +41,7 @@ class UnitController extends Controller
      */
     public function show($id)
     {
-        return Unit::find($id) ? Unit::find($id) : ['error' => '404'];
+        return Unit::where('active', true)->find($id) ? Unit::where('active', true)->find($id) : ['error' => '404'];
     }
 
     /**
@@ -67,8 +67,9 @@ class UnitController extends Controller
      */
     public function destroy(Unit  $unit)
     {
-        $array = ['status' => 'deleted'];
-        $array['unit'] = $unit->delete($unit);
+        $array = ['status' => 'inactivated'];
+        // $client->delete($client);
+        Unit::where('id', $unit->id)->update(['active' => 0]);
         return $array;
 
     }

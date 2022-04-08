@@ -26,6 +26,7 @@ class UnitRequest extends FormRequest
     {
         return [
             'name' => ['required','min:1', 'max:3', new UpperCaseString()],
+            // 'name' => 'required|min:1|unique:units,name,'.request()->id,'max:3 | UpperCaseString',
         ];
     }
 }

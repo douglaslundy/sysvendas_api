@@ -16,7 +16,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return  Product::where('active', true)->orderBy('id', 'desc')->get();
+        // return Product::with(['category' => function ($query) {
+        //     $query->orderBy('id', 'desc');
+        // }])->get();
+
+
+        return  Product::with(['category'])->with(['unity'])->where('active', true)->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -28,7 +33,14 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $array = ['status' => 'created'];
-        $array['product'] = Product::create($request->all());
+        $product = Product::create($request->all());
+
+        $product = Product::find($product->id);
+        $product['category'] = $product->category;
+        $product['unity'] = $product->unity;
+
+        $array['product'] = $product;
+
         return $array;
     }
 
@@ -40,7 +52,13 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        return Product::where('active', true)->find($id) ? Product::find($id) : ['error' => '404'];
+        if (!Product::where('active', true)->find($id))
+            return ['error' => '404'];
+
+        $prod = Product::find($id);
+        $prod['category'] = $prod->category;
+        $prod['unity'] = $prod->unity;
+        return $prod;
     }
 
     /**
@@ -54,6 +72,10 @@ class ProductController extends Controller
     {
         $array = ['status' => 'updated'];
         $product->update($request->all());
+        $product = Product::find($product->id);
+        $product['category'] = $product->category;
+        $product['unity'] = $product->unity;
+
         $array['product'] = $product;
         return $array;
     }
