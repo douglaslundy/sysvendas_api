@@ -26,7 +26,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:50'],
-            'bar_code' => ['required', 'string', 'max:50', 'unique:products, products'.request()->id],
+            'bar_code' => 'required|string|max:50|unique:products,bar_code,'.request()->id,
             'id_unity' => ['required', 'integer'],
             'id_category' => ['required', 'integer'],
             'cost_value' => ['required', 'integer'],
