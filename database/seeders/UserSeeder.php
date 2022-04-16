@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
             'profile' => 'admin',
             'name' => 'Douglas Lundy Santos',
             'email' => 'douglaslundy@gmail.com',
+            'cpf' => '08449222699',
             'password' => Hash::make('12345'),
             'active' => 1
         ]);
