@@ -29,5 +29,34 @@ class UnitSeeder extends Seeder
         DB::table('units')->insert([
             'name' => 'PC'
         ]);
+
+        DB::table('units')->insert([
+            'name' => 'BAR'
+        ]);
+
+        DB::table('units')->insert([
+            'name' => 'BR'
+        ]);
+
+        DB::table('units')->insert([
+            'name' => 'KT'
+        ]);
+
+        DB::table('units')->insert([
+            'name' => 'MT'
+        ]);
+
+        DB::table('units')->insert([
+            'name' => 'PAR'
+        ]);
+
+        DB::table('units')->insert([
+            'name' => 'PDC'
+        ]);
+
+        DB::table('units')->insert([
+            'name' => 'ROL'
+        ]);
+
     }
 }
