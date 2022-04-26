@@ -18,9 +18,9 @@ return new class extends Migration
             $table->integer('id_user');
             $table->integer('id_client');
             $table->timestamp('sale_date');
-            $table->string('paied', ['yes', 'no']);
+            $table->enum('paied', ['yes', 'no']);
             // in_cash = 'a vista'| on_term = 'a prazo'
-            $table->string('type_sale', ['in_cash', 'on_term']);
+            $table->enum('type_sale', ['in_cash', 'on_term']);
             $table->timestamp('due_date')->nullable();
             $table->timestamp('pay_date')->nullable();
             $table->integer('chek')->nullable()->default(0);

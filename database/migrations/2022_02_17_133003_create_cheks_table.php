@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use phpDocumentor\Reflection\Types\Nullable;
 
 return new class extends Migration
 {
@@ -22,7 +21,7 @@ return new class extends Migration
             $table->timestamp('date_chek');
             $table->timestamp('date_pay')->nullable();
             $table->timestamp('date_pay_out')->nullable();
-            $table->string('situation', ['late','waiting' ,'returned', 'paied']);
+            $table->enum('situation', ['late','waiting' ,'returned', 'paied']);
         });
     }
 
