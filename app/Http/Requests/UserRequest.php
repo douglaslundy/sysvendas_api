@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            "profile" => ['required', 'string', 'max:50', 'in:,admin, operator, user'],
+            "profile" => ['required', 'string', 'max:50', Rule::in('admin', 'operator', 'user')],
             'name' => 'required|string|max:50',
             'email' => 'string|nullable|max:100|unique:users,email,'.request()->id,
             'cpf' => 'string|nullable|max:18|unique:users,cpf,'.request()->id,

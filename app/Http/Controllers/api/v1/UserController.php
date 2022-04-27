@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use DateTime;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
@@ -19,7 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
-       return User::where('active', true)->orderBy('id', 'desc')->get();
+        return User::where('active', true)->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -30,8 +31,12 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
+
         $array = ['status' => 'created'];
-        $array['user'] = User::create($request->all());
+        $user = $request->all();
+        $user['password'] = Hash::make($user['password']);
+        User::create($user);
+        $array['user'] = $user;
         return $array;
     }
 
@@ -56,7 +61,9 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         $array = ['status' => 'updated'];
-        $user->update($request->all());
+        $data = $request->all();
+        $data['password'] = Hash::make($data['password']);
+        $user->update($data);
         $array['user'] = $user;
         return $array;
     }
