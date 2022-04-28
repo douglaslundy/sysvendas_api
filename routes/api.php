@@ -2,17 +2,17 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\ClientController;
-use App\Http\Controllers\Api\V1\SaleController;
-use App\Http\Controllers\Api\V1\CartController;
-use App\Http\Controllers\Api\V1\CategorieController;
-use App\Http\Controllers\Api\V1\CompanyController;
-use App\Http\Controllers\Api\V1\ProductController;
-use App\Http\Controllers\Api\V1\ChekController;
-use App\Http\Controllers\Api\V1\UnitController;
-use App\Http\Controllers\Api\V1\AddressController;
-use App\Http\Controllers\Api\V1\UserController;
-use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\api\v1\ClientController;
+use App\Http\Controllers\api\v1\SaleController;
+use App\Http\Controllers\api\v1\CartController;
+use App\Http\Controllers\api\v1\CategorieController;
+use App\Http\Controllers\api\v1\CompanyController;
+use App\Http\Controllers\api\v1\ProductController;
+use App\Http\Controllers\api\v1\ChekController;
+use App\Http\Controllers\api\v1\UnitController;
+use App\Http\Controllers\api\v1\AddressController;
+use App\Http\Controllers\api\v1\UserController;
+use App\Http\Controllers\api\v1\AuthController;
 
 Route::get('/ping', function () {
     return ['pong' => true];
