@@ -25,5 +25,14 @@ class UserSeeder extends Seeder
             'password' => Hash::make('12345'),
             'active' => 1
         ]);
+
+        DB::table('users')->insert([
+            'profile' => 'admin',
+            'name' => 'RONALDO MIGLIORINI  JUNIOR',
+            'email' => '@gmail.com',
+            'cpf' => '14980477690',
+            'password' => Hash::make('12345'),
+            'active' => 1
+        ]);
     }
 }
