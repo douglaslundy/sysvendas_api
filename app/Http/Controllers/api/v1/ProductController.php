@@ -21,7 +21,7 @@ class ProductController extends Controller
         // }])->get();
 
 
-        return  Product::with(['category'])->with(['unity'])->where('active', true)->orderBy('id', 'desc')->get();
+        return  Product::with(['category'])->with(['unity'])->where('active', true)->orderBy('name', 'asc')->get();
     }
 
     /**
