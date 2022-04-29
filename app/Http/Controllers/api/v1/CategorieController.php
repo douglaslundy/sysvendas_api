@@ -18,7 +18,7 @@ class CategorieController extends Controller
     public function index()
     {
         // return Categorie::all();
-        return  Categorie::where('active', true)->orderBy('id', 'desc')->get();
+        return  Categorie::where('active', true)->orderBy('name', 'asc')->get();
     }
 
     /**

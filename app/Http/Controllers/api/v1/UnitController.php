@@ -17,7 +17,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        return Unit::where('active', true)->get();
+        return Unit::where('active', true)->orderBy('name', 'asc')->get();
     }
 
     /**
