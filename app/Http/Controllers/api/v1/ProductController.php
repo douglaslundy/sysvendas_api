@@ -95,13 +95,13 @@ class ProductController extends Controller
     {
         $data =  Product::where('active', true)->where('id_category', $request->id)->orderBy('id', 'desc')->get();
 
-        // foreach($data as $prod) {
-        //     $prod['sale_value'] = ($prod->sale_value + ($prod->sale_value * ($request ->percent / 100)));
-        //     $prod->update();
-        // }
-        // // return ($request->saleValue + ($request->saleValue * ($request ->percent / 100)));
-        // return "Categoria Atualizada com Sucesso";
+        foreach($data as $prod) {
+            $prod['sale_value'] = ($prod->sale_value + ($prod->sale_value * ($request ->percent / 100)));
+            $prod->update();
+        }
+        // return ($request->saleValue + ($request->saleValue * ($request ->percent / 100)));
+        return "Categoria Atualizada com Sucesso";
 
-        return $data =  Product::where('active', true)->where('id_category', $request->id)->orderBy('id', 'desc')->get();
+        // return $data =  Product::where('active', true)->where('id_category', $request->id)->orderBy('id', 'desc')->get();
     }
 }
