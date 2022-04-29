@@ -44,12 +44,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('users', UserController::class);
 });
 
-// Route::apiResource('clients', ClientController::class);
-// Route::apiResource('categorie', CategorieController::class);
-// Route::apiResource('carts', CartController::class);
-// Route::apiResource('products', ProductController::class);
-// Route::apiResource('cheks', ChekController::class);
-// Route::apiResource('sales', SaleController::class);
-// Route::apiResource('address', AddressController::class);
-// Route::apiResource('units', UnitController::class);
-// Route::apiResource('users', UserController::class);
+
+Route::post('/updateValueCategories', [ProductController::class, 'updateValueCategories']);

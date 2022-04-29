@@ -16,11 +16,6 @@ class ProductController extends Controller
      */
     public function index()
     {
-        // return Product::with(['category' => function ($query) {
-        //     $query->orderBy('id', 'desc');
-        // }])->get();
-
-
         return  Product::with(['category'])->with(['unity'])->where('active', true)->orderBy('name', 'asc')->get();
     }
 
@@ -34,13 +29,10 @@ class ProductController extends Controller
     {
         $array = ['status' => 'created'];
         $product = Product::create($request->all());
-
         $product = Product::find($product->id);
         $product['category'] = $product->category;
         $product['unity'] = $product->unity;
-
         $array['product'] = $product;
-
         return $array;
     }
 
@@ -60,7 +52,6 @@ class ProductController extends Controller
         $prod['unity'] = $prod->unity;
         return $prod;
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -92,5 +83,25 @@ class ProductController extends Controller
         $array = ['status' => 'inactivated'];
         Product::where('id', $product->id)->update(['active' => 0]);
         return $array;
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateValueCategories(Request $request)
+    {
+        $data =  Product::where('active', true)->where('id_category', $request->id)->orderBy('id', 'desc')->get();
+
+        foreach($data as $prod) {
+            $prod['sale_value'] = ($prod->sale_value + ($prod->sale_value * ($request ->percent / 100)));
+            $prod->update();
+        }
+        // return ($request->saleValue + ($request->saleValue * ($request ->percent / 100)));
+        return "Categoria Atualizada com Sucesso";
+
+        // return $data =  Product::where('active', true)->where('id_category', $request->id)->orderBy('id', 'desc')->get();
     }
 }
