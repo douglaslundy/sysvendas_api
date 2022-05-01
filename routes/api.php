@@ -42,7 +42,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('address', AddressController::class);
     Route::apiResource('units', UnitController::class);
     Route::apiResource('users', UserController::class);
+    Route::post('products/updateValueCategories', [ProductController::class, 'updateValueCategories']);
 });
-
-
-Route::post('/updateValueCategories', [ProductController::class, 'updateValueCategories']);

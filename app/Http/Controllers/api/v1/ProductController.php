@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
+use Exception;
 
 class ProductController extends Controller
 {
@@ -93,15 +94,19 @@ class ProductController extends Controller
      */
     public function updateValueCategories(Request $request)
     {
-        $data =  Product::where('active', true)->where('id_category', $request->id)->orderBy('id', 'desc')->get();
+        if (!Product::where('active', true)->where('id_category', $request->id_category))
+            throw new Exception('Categoria não encontrada');
 
-        foreach($data as $prod) {
-            $prod['sale_value'] = ($prod->sale_value + ($prod->sale_value * ($request ->percent / 100)));
+        if (!$request->percent)
+            throw new Exception('Valor percentual não informado ou inválido');
+
+        $array = ['status' => 'Preço dos produtos desta categoria foram atualizados com Sucesso'];
+        $data =  Product::where('active', true)->where('id_category', $request->id_category)->get();
+
+        foreach ($data as $prod) {
+            $prod['sale_value'] = ($prod->sale_value + ($prod->sale_value * ($request->percent / 100)));
             $prod->update();
         }
-        // return ($request->saleValue + ($request->saleValue * ($request ->percent / 100)));
-        return "Categoria Atualizada com Sucesso";
-
-        // return $data =  Product::where('active', true)->where('id_category', $request->id)->orderBy('id', 'desc')->get();
+        return $array;
     }
 }
