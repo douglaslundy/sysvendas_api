@@ -21,7 +21,7 @@ class ClientController extends Controller
     public function index()
     {
         // return Client::where('active', true)->get();
-        return Client::where('active', true)->orderBy('id', 'desc')->get();
+        return Client::where('active', true)->orderBy('full_name', 'asc')->get();
     }
 
     /**
