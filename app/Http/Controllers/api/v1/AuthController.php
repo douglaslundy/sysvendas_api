@@ -42,14 +42,15 @@ class AuthController extends Controller
         return response($response, 201);
     }
 
-    // public function validateToken(){
-    //     $array = ['error' => ''];
+    public function validateToken(){
+        $array = ['error' => ''];
+        $array = ['message' => 'Authenticated'];
 
-    //     $user = auth()->user();
-    //     $array['user'] = $user;
+        $user = auth()->user();
+        $array['user'] = $user;
 
-    //     return $array;
-    // }
+        return $array;
+    }
 
     public function logout()
     {
