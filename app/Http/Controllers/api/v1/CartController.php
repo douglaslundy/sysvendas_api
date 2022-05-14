@@ -28,40 +28,73 @@ class CartController extends Controller
      */
     public function store(CartRequest $request)
     {
-       return Cart::create($request->all());
+        //    return Cart::create($request->all());
+        $array = ['status' => 'created'];
+        $array['cart'] = Cart::create($request->all());
+        return $array;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $id_user
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id_user)
     {
-        return "action is not permited";
+        return Cart::with(['product'])->where('id_user', $id_user)->orderBy('id', 'asc')->get();
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  Cart  $cart
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CartRequest $request, Cart  $cart)
+    public function update(CartRequest $request, $id)
     {
-        //
+        if(!Cart::where('id', $id)->first())
+            return ['status' => 'Este produto não existe no carrinho'];
+
+        $array = ['status' => 'updated'];
+        $cart = Cart::where('id', $id)->first();
+        $cart['qtd'] = $request->input('qtd');
+        $cart->update();
+        $array['cart'] = $cart;
+        return $array;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Cart  $cart
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cart  $cart)
+    public function destroy($id)
     {
-        //
+        if(!Cart::where('id', $id)->first())
+            return ['status' => 'Este produto não existe no carrinho'];
+
+        $cart = Cart::where('id', $id)->first();
+        $array = ['status' => 'deleted'];
+        $cart->delete();
+        return $array;
+    }
+
+    /**
+     * Remove all products from storage.
+     *
+     * @param  int  $id_user
+     * @return \Illuminate\Http\Response
+     */
+    public function dropProductsPerUser($id_user)
+    {
+        if(!Cart::where('id_user', $id_user)->first())
+            return ['status' => 'este usuario não possui produtos no carrinho'];
+
+        $array = ['status' => 'All deleted '];
+        Cart::where('id_user', $id_user)->delete();
+        return $array;
     }
 }

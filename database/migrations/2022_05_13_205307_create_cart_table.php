@@ -17,11 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('id_user');
             $table->integer('id_product');
-            $table->string('name_product');
-            $table->string('bar_code', 50);
-            $table->bigInteger('qdt');
-            $table->integer('value');
-            $table->string('number_item', 5);
+            $table->integer('qtd');
         });
     }
 

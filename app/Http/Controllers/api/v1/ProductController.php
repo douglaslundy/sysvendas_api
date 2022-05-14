@@ -94,7 +94,7 @@ class ProductController extends Controller
      */
     public function updateValueCategories(Request $request)
     {
-        if (!Product::where('active', true)->where('id_category', $request->id_category))
+        if (!Product::where('active', true)->where('id_category', $request->id_category)->first())
             throw new Exception('Categoria não encontrada');
 
         if (!$request->percent)
