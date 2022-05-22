@@ -27,10 +27,6 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Route::apiResource('auth', AuthController::class);
 
-
-Route::apiResource('cart', CartController::class);
-Route::delete('cart/drop/{id_user}', [CartController::class, 'dropProductsPerUser']);
-
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -39,7 +35,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('company', CompanyController::class);
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('categorie', CategorieController::class);
-    // Route::apiResource('cart', CartController::class);
+    Route::apiResource('cart', CartController::class);
+    Route::delete('cart/drop/{id_user}', [CartController::class, 'dropProductsPerUser']);
     Route::apiResource('products', ProductController::class);
     Route::apiResource('cheks', ChekController::class);
     Route::apiResource('sales', SaleController::class);

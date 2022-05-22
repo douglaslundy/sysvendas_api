@@ -14,7 +14,6 @@ class Product extends Model
     ['name', 'bar_code', 'id_unity', 'id_category', 'cost_value', 'sale_value', 'stock', 'active'];
 
     public function category(){
-        // return $this->belongsTo(Categorie::class);
         return $this->hasOne(Categorie::class, 'id', 'id_category');
     }
 
