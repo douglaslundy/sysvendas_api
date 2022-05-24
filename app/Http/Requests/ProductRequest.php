@@ -32,6 +32,7 @@ class ProductRequest extends FormRequest
             'cost_value' => ['required', 'integer'],
             'sale_value' => [new ChekIfValueSaleIsBiggestThanValueCost(request()->input("cost_value")), 'required', 'integer'],
             'stock' => ['required', 'integer'],
+            'reason' => ['integer'],
             'active' => ['nullable', 'boolean'],
         ];
     }

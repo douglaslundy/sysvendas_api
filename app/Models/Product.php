@@ -11,7 +11,7 @@ class Product extends Model
 
     public $timestamps = false;
     protected $fillable =
-    ['name', 'bar_code', 'id_unity', 'id_category', 'cost_value', 'sale_value', 'stock', 'active'];
+    ['name', 'bar_code', 'id_unity', 'id_category', 'cost_value', 'sale_value', 'stock','reason', 'active'];
 
     public function category(){
         return $this->hasOne(Categorie::class, 'id', 'id_category');
