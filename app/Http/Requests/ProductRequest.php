@@ -36,4 +36,11 @@ class ProductRequest extends FormRequest
             'active' => ['nullable', 'boolean'],
         ];
     }
+
+public function messages()
+    {
+        return [
+            'bar_code.unique' => 'o codigo deste produto ja foi cadastrado',
+        ];
+    }
 }

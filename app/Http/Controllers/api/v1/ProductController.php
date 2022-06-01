@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
+use App\Models\ProductStock;
 use Exception;
 
 class ProductController extends Controller
@@ -17,7 +18,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return  Product::with(['category'])->with(['unity'])->where('active', true)->orderBy('name', 'asc')->get();
+        return  Product::with(['stock'])->with(['category'])->with(['unity'])->where('active', true)->orderBy('name', 'asc')->get();
     }
 
     /**
@@ -31,6 +32,13 @@ class ProductController extends Controller
         $array = ['status' => 'created'];
         $product = Product::create($request->all());
         $product = Product::find($product->id);
+
+        $stock = new ProductStock();
+        $stock->id_product = $product->id;
+        $stock->stock = $request->input('stock');
+        $stock->save();
+        $product['stock'] = $request->input('stock');
+
         $product['category'] = $product->category;
         $product['unity'] = $product->unity;
         $array['product'] = $product;
@@ -48,9 +56,7 @@ class ProductController extends Controller
         if (!Product::where('active', true)->find($id))
             return ['error' => '404'];
 
-        $prod = Product::find($id);
-        $prod['category'] = $prod->category;
-        $prod['unity'] = $prod->unity;
+        $prod = Product::with(['stock'])->with(['unity'])->with(['category'])->find($id);
         return $prod;
     }
     /**
@@ -65,6 +71,20 @@ class ProductController extends Controller
         $array = ['status' => 'updated'];
         $product->update($request->all());
         $product = Product::find($product->id);
+
+        $stock = ProductStock::where('id_product', $product->id)->first();
+        if ($stock) {
+            $stock->id_product = $product->id;
+            $stock->stock = $request->input('stock');
+            $stock->update();
+        } else {
+            $stock = new ProductStock();
+            $stock->id_product = $product->id;
+            $stock->stock = $request->input('stock');
+            $stock->save();
+        }
+
+        $product['stock'] = $request->input('stock');
         $product['category'] = $product->category;
         $product['unity'] = $product->unity;
 
