@@ -43,7 +43,7 @@ class ProductController extends Controller
             $product->update();
         }
 
-        $product['stock'] = $request->input('stock');
+        $product['stock'] = $stock;
 
         $product['category'] = $product->category;
         $product['unity'] = $product->unity;
@@ -77,7 +77,7 @@ class ProductController extends Controller
         $array = ['status' => 'updated'];
         // $prod = $request->all();
 
-        if($request['id_product_stock'] == null){
+        if ($request['id_product_stock'] == null) {
             $request['id_product_stock'] = $request['id'];
         }
 
@@ -85,10 +85,13 @@ class ProductController extends Controller
         $product = Product::find($product->id);
 
         $stock = ProductStock::where('id_product', $product->id_product_stock)->first();
+
         if ($stock) {
-            // $stock->id_product = $product->id_product_stock;
-            $stock->stock = $request->input('stock');
-            $stock->update();
+            if ($stock->id_product == $product->id) {
+                $stock->stock = $request->input('stock');
+                $stock->update();
+            }
+
         } else {
             $stock = new ProductStock();
             $stock->id_product = $product->id_product_stock;
@@ -96,7 +99,8 @@ class ProductController extends Controller
             $stock->save();
         }
 
-        $product['stock'] = $request->input('stock');
+        // $product['stock'] = $stock->stock;
+        $product['stock'] = $stock;
         $product['category'] = $product->category;
         $product['unity'] = $product->unity;
 

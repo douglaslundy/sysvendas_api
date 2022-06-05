@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\ChekIfValueSaleIsBiggestThanValueCost;
+use App\Rules\IfAlreadyProductStock;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductRequest extends FormRequest
@@ -31,8 +32,8 @@ class ProductRequest extends FormRequest
             'id_category' => ['required', 'integer'],
             'cost_value' => ['required', 'integer'],
             'sale_value' => [new ChekIfValueSaleIsBiggestThanValueCost(request()->input("cost_value")), 'required', 'integer'],
-            'stock' => ['required', 'integer'],
-            'id_product_stock' => ['integer', 'nullable'],
+            'stock' => ['nullable', 'integer'],
+            'id_product_stock' => ['integer', 'nullable', new IfAlreadyProductStock],
             'reason' => ['integer'],
             'active' => ['nullable', 'boolean'],
         ];

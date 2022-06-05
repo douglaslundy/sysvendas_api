@@ -2,10 +2,10 @@
 
 namespace App\Rules;
 
-use App\Models\Client;
+use App\Models\ProductStock;
 use Illuminate\Contracts\Validation\Rule;
 
-class IfInClients implements Rule
+class IfAlreadyProductStock implements Rule
 {
     /**
      * Create a new rule instance.
@@ -26,7 +26,7 @@ class IfInClients implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Client::where('id', $value)->count();
+        return ProductStock::where('id_product', $value)->count();
     }
 
     /**
@@ -36,6 +36,6 @@ class IfInClients implements Rule
      */
     public function message()
     {
-        return 'Este cliente não existe.';
+        return 'Este produto não possui estoque';
     }
 }
