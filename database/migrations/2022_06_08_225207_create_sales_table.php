@@ -16,14 +16,13 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->integer('id_user');
-            $table->integer('id_client');
+            $table->integer('id_client')->nullable();
             $table->timestamp('sale_date');
             $table->enum('paied', ['yes', 'no']);
-            // in_cash = 'a vista'| on_term = 'a prazo'
             $table->enum('type_sale', ['in_cash', 'on_term']);
             $table->timestamp('due_date')->nullable();
             $table->timestamp('pay_date')->nullable();
-            $table->integer('chek')->nullable()->default(0);
+            $table->integer('check')->nullable()->default(0);
             $table->integer('cash')->nullable()->default(0);
             $table->integer('card')->nullable()->default(0);
             $table->integer('total_sale')->default(0);

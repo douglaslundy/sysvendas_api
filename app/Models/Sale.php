@@ -17,7 +17,7 @@ class Sale extends Model
         'type_sale',
         'due_date',
         'pay_date',
-        'chek',
+        'check',
         'cash',
         'card',
         'total_sale'

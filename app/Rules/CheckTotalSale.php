@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class CheckTotalSale implements Rule
 {
-    private $chek;
+    private $check;
     private $cash;
     private $card;
     /**
@@ -14,9 +14,9 @@ class CheckTotalSale implements Rule
      *
      * @return void
      */
-    public function __construct($chek, $cash, $card)
+    public function __construct($check, $cash, $card)
     {
-        $this->chek = $chek;
+        $this->check = $check;
         $this->cash = $cash;
         $this->card = $card;
     }
@@ -30,7 +30,7 @@ class CheckTotalSale implements Rule
      */
     public function passes($attribute, $value)
     {
-        return ($value == ($this->chek + $this->cash + $this->card));
+        return ($value <= ($this->check + $this->cash + $this->card));
     }
 
     /**
@@ -40,6 +40,6 @@ class CheckTotalSale implements Rule
      */
     public function message()
     {
-        return 'The sum of the values chek, cash, and card don´t equals at value total sale';
+        return 'A soma dos valores pagos são inferiores que o valore da venda';
     }
 }
