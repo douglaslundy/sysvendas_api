@@ -5,8 +5,11 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Sale;
+use App\Models\Cart;
+use App\Models\ItensOnSale;
 
 use App\Http\Requests\SaleRequest;
+use App\Models\Client;
 
 class SaleController extends Controller
 {
@@ -28,7 +31,24 @@ class SaleController extends Controller
      */
     public function store(SaleRequest $request)
     {
-        return Sale::create($request->all());
+        $sale = Sale::create($request->all());
+
+        $Products = Cart::where('id_user', $request->id_user)->get();
+
+        foreach ($Products as $product) {
+            $item = new ItensOnSale();
+            $item->id_sale = $sale->id;
+            $item->id_user = $sale->id_user;
+            $item->id_product = $product->id_product;
+            $item->qtd = $product->qtd;
+            $item->sale_value = $product->sale_value;
+            $item->save();
+        }
+
+        if ($sale->type_sale == "on_term")
+            $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale);
+
+        return $this->dropProductsPerUser($sale->id_user);
     }
 
     /**
@@ -63,5 +83,26 @@ class SaleController extends Controller
     public function destroy(Sale  $sale)
     {
         return $sale->delete($sale);
+    }
+
+
+
+    public function dropProductsPerUser($id_user)
+    {
+        if (!Cart::where('id_user', $id_user)->first())
+            return ['status' => 'este usuario não possui produtos no carrinho'];
+
+        return Cart::where('id_user', $id_user)->delete();
+    }
+
+    public function updateDebitBalanceClient($id_client, $value)
+    {
+        $client = Client::where('id', $id_client)->first();
+
+        if (!$client)
+            return ['status' => 'este usuario não possui produtos no carrinho'];
+
+        $client->debit_balance += $value;
+        return $client->update();
     }
 }

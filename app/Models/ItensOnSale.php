@@ -5,21 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cart extends Model
+class ItensOnSale extends Model
 {
     use HasFactory;
-    protected $table = 'cart';
-    protected $hidden = ['id_product'];
+    protected $table = 'itens_on_sale';
     public $timestamps = false;
+
     protected $fillable = [
+        'id_sale',
         'id_user',
         'id_product',
+        'qdt',
         'sale_value',
-        'qtd'
     ];
-
-    public function product(){
-        return $this->hasOne(Product::class, 'id', 'id_product');
-    }
 
 }
