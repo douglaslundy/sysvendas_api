@@ -20,7 +20,8 @@ class SaleController extends Controller
      */
     public function index()
     {
-        return Sale::all();
+        // return Sale::all();
+        return Sale::with(['itens'])->get();
     }
 
     /**
@@ -41,7 +42,7 @@ class SaleController extends Controller
             $item->id_user = $sale->id_user;
             $item->id_product = $product->id_product;
             $item->qtd = $product->qtd;
-            $item->sale_value = $product->sale_value;
+            $item->item_value = $product->sale_value;
             $item->save();
         }
 

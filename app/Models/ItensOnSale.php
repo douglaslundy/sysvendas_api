@@ -9,6 +9,7 @@ class ItensOnSale extends Model
 {
     use HasFactory;
     protected $table = 'itens_on_sale';
+    protected $hidden = ['id', 'id_sale', 'id_user', 'id_product', 'sale_value', 'cost_value', 'id_unity', 'id_category', 'id_product_stock', 'active', 'reason'];
     public $timestamps = false;
 
     protected $fillable = [
@@ -16,7 +17,7 @@ class ItensOnSale extends Model
         'id_user',
         'id_product',
         'qdt',
-        'sale_value',
+        'item_value',
     ];
 
 }

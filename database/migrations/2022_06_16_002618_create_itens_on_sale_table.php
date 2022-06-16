@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('id_user');
             $table->integer('id_product');
             $table->bigInteger('qtd')->default(1);
-            $table->integer('sale_value')->default(0);
+            $table->integer('item_value')->default(0);
         });
     }
 

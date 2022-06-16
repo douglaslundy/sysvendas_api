@@ -18,7 +18,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return  Product::with(['stock'])->with(['category'])->with(['unity'])->where('active', true)->orderBy('name', 'asc')->get();
+        // return  Product::with(['stock'])->with(['category'])->with(['unity'])->where('active', true)->orderBy('name', 'asc')->get();
+
+        return  Product::with(['stock', 'category', 'unity'])->where('active', true)->orderBy('name', 'asc')->get();
     }
 
     /**
@@ -62,7 +64,8 @@ class ProductController extends Controller
         if (!Product::where('active', true)->find($id))
             return ['error' => '404'];
 
-        $prod = Product::with(['stock'])->with(['unity'])->with(['category'])->find($id);
+        // $prod = Product::with(['stock'])->with(['unity'])->with(['category'])->find($id);
+        $prod = Product::with(['stock', 'unity', 'category'])->find($id);
         return $prod;
     }
     /**
