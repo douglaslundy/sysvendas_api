@@ -20,8 +20,7 @@ class SaleController extends Controller
      */
     public function index()
     {
-        // return Sale::all();
-        return Sale::with(['itens'])->get();
+        return Sale::with(['itens', 'client'])->orderBy('id', 'desc')->get();
     }
 
     /**

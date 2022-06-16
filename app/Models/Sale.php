@@ -28,4 +28,8 @@ class Sale extends Model
         // return $this->hasMany(ItensOnSale::class, 'id_sale')->with('product');
         return $this->hasMany(ItensOnSale::class, 'id_sale')->join('products', 'products.id', '=', 'itens_on_sale.id_product');
     }
+
+    public function client(){
+        return $this->belongsTo(client::class, 'id_client');
+    }
 }
