@@ -9,6 +9,7 @@ class Sale extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $hidden = ['id_client'];
     protected $fillable = [
         'id_user',
         'id_client',

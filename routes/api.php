@@ -39,7 +39,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('cart/drop/{id_user}', [CartController::class, 'dropProductsPerUser']);
     Route::apiResource('products', ProductController::class);
     Route::apiResource('cheks', ChekController::class);
+
     Route::apiResource('sales', SaleController::class);
+    Route::get('sales/salesPerClient/{id_client}/{paied}', [SaleController::class, 'salesPerClient']);
+
     Route::apiResource('address', AddressController::class);
     Route::apiResource('units', UnitController::class);
     Route::apiResource('users', UserController::class);

@@ -10,6 +10,7 @@ use App\Models\ItensOnSale;
 
 use App\Http\Requests\SaleRequest;
 use App\Models\Client;
+use Exception;
 
 class SaleController extends Controller
 {
@@ -104,5 +105,13 @@ class SaleController extends Controller
 
         $client->debit_balance += $value;
         return $client->update();
+    }
+
+    public function salesPerClient($id_client, $paied)
+    {
+        if ($paied == "all")
+            return Sale::where('id_client', $id_client)->with(['itens', 'client'])->orderBy('id', 'desc')->get();
+
+        return Sale::where('id_client', $id_client)->where('paied', $paied)->with(['itens', 'client'])->orderBy('id', 'desc')->get();
     }
 }
