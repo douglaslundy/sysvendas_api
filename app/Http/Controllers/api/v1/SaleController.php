@@ -10,6 +10,7 @@ use App\Models\ItensOnSale;
 
 use App\Http\Requests\SaleRequest;
 use App\Models\Client;
+use DateTime;
 use Exception;
 
 class SaleController extends Controller
@@ -113,5 +114,37 @@ class SaleController extends Controller
             return Sale::where('id_client', $id_client)->with(['itens', 'client'])->orderBy('id', 'desc')->get();
 
         return Sale::where('id_client', $id_client)->where('paied', $paied)->with(['itens', 'client'])->orderBy('id', 'desc')->get();
+    }
+
+    public function paySale(Request $request)
+    {
+        if ($request->id) {
+
+            $payClient = 0;
+            $sales = 0;
+
+            foreach ($request->id as $id) {
+                $sale = Sale::where('id', $id)->where('id_client', $request->id_client)->where('paied', 'no')->first();
+
+                if ($sale) {
+                    $sale->paied = "yes";
+                    $sale->pay_date = new DateTime();
+                    $sale->save();
+                    $payClient += $sale->total_sale;
+                    $sales += 1;
+                }
+            }
+
+            $client = Client::where('id', $request->id_client)->first();
+
+            if ($client) {
+                $client->debit_balance -= $payClient;
+                $client->save();
+            }
+
+            return  "O pagamento de $sales vendas totalizando um valor de R$ " . $payClient / 100 . " foi realizado com sucesso";
+        } else {
+            return "informe pelo menos uma venda";
+        }
     }
 }
