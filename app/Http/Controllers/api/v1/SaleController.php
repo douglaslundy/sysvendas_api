@@ -33,7 +33,13 @@ class SaleController extends Controller
      */
     public function store(SaleRequest $request)
     {
-        $sale = Sale::create($request->all());
+        $form = $request->all();
+
+        if($form['type_sale'] == "in_cash"){
+            $form['pay_date'] = new DateTime();
+        }
+
+        $sale = Sale::create($form);
 
         $Products = Cart::where('id_user', $request->id_user)->get();
 
@@ -118,16 +124,19 @@ class SaleController extends Controller
 
     public function paySale(Request $request)
     {
-        if ($request->id) {
+        if ($request->id_sales) {
 
             $payClient = 0;
             $sales = 0;
 
-            foreach ($request->id as $id) {
+            foreach ($request->id_sales as $id) {
                 $sale = Sale::where('id', $id)->where('id_client', $request->id_client)->where('paied', 'no')->first();
 
                 if ($sale) {
                     $sale->paied = "yes";
+                    // $sale->cash = $sale->cash;
+                    // $sale->card = $sale->card;
+                    // $sale->check = $sale->check;
                     $sale->pay_date = new DateTime();
                     $sale->save();
                     $payClient += $sale->total_sale;
@@ -142,7 +151,7 @@ class SaleController extends Controller
                 $client->save();
             }
 
-            return  "O pagamento de $sales vendas totalizando um valor de R$ " . $payClient / 100 . " foi realizado com sucesso";
+            return  "O pagamento de $sales vendas no total de R$ " . $payClient / 100 . " foi realizado com sucesso";
         } else {
             return "informe pelo menos uma venda";
         }
