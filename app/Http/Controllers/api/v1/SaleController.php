@@ -79,7 +79,7 @@ class SaleController extends Controller
      */
     public function update(SaleRequest $request, $id)
     {
-        return ['error' => 'The sale don´t can upudated'];
+        return ['error' => 'The sale don´t can updated'];
     }
 
     /**

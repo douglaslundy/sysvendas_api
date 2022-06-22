@@ -27,7 +27,7 @@ class IfExistsClientInSale implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $value == 'in_cash' ? $this->client == null : $this->client !== null;
+        return $value == 'on_term' ? $this->client !== null : true;
     }
 
     /**

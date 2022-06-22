@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Cart;
 
 use App\Http\Requests\CartRequest;
+use App\Models\ProductStock;
+use Exception;
 
 class CartController extends Controller
 {
@@ -29,8 +31,22 @@ class CartController extends Controller
     public function store(CartRequest $request)
     {
         //    return Cart::create($request->all());
+        $cart = $request->all();
+
+        $estoque = ProductStock::where('id_product', $cart['id_product'])->first();
+
+        if (!$estoque)
+        throw new Exception('Este produto não possui estoque cadastrado');
+
+        $estoque->stock -= $cart['qtd'];
+
+        if ($estoque->stock < 0)
+        throw new Exception('Produto sem estoque para venda desejada');
+
+        $estoque->save();
+
         $array = ['status' => 'created'];
-        $array['cart'] = Cart::create($request->all());
+        $array['cart'] = Cart::create($cart);
         return $array;
     }
 
@@ -77,6 +93,16 @@ class CartController extends Controller
             return ['status' => 'Este produto não existe no carrinho'];
 
         $cart = Cart::where('id', $id)->first();
+
+        $estoque = ProductStock::where('id_product', $cart-> id_product)->first();
+
+        if (!$estoque)
+        throw new Exception('Este produto não possui estoque cadastrado');
+
+        $estoque->stock += $cart['qtd'];
+        $estoque->save();
+
+
         $array = ['status' => 'deleted'];
         $cart->delete();
         return $array;
