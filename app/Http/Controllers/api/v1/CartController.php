@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Cart;
 
 use App\Http\Requests\CartRequest;
+use App\Models\Product;
 use App\Models\ProductStock;
 use Exception;
 
@@ -33,21 +34,30 @@ class CartController extends Controller
         //    return Cart::create($request->all());
         $cart = $request->all();
 
-        $estoque = ProductStock::where('id_product', $cart['id_product'])->first();
+        $estoque = ProductStock::where('id_product', $cart['id_product_stock'])->first();
 
         if (!$estoque)
-        throw new Exception('Este produto não possui estoque cadastrado');
+            throw new Exception('Este produto não possui estoque cadastrado');
 
-        $estoque->stock -= $cart['qtd'];
+        $estoque->stock -= ($cart['qtd'] * $cart['reason']);
 
-        if ($estoque->stock < 0)
-        throw new Exception('Produto sem estoque para venda desejada');
+        if (!$cart['qtd'] * $cart['reason'] > $estoque->stock )
+            throw new Exception('Produto sem estoque para venda desejada');
 
         $estoque->save();
 
         $array = ['status' => 'created'];
-        $array['cart'] = Cart::create($cart);
-        return $array;
+
+        if (Cart::where('id_product', $cart['id_product'])->first()) {
+            $existedCart = Cart::where('id_product', $cart['id_product'])->first();
+            $existedCart->qtd += $cart['qtd'];
+            $existedCart->save();
+            $array['cart'] = $existedCart;
+            return $array;
+        } else {
+            $array['cart'] = Cart::create($cart);
+            return $array;
+        }
     }
 
     /**
@@ -70,7 +80,7 @@ class CartController extends Controller
      */
     public function update(CartRequest $request, $id)
     {
-        if(!Cart::where('id', $id)->first())
+        if (!Cart::where('id', $id)->first())
             return ['status' => 'Este produto não existe no carrinho'];
 
         $array = ['status' => 'updated'];
@@ -89,17 +99,19 @@ class CartController extends Controller
      */
     public function destroy($id)
     {
-        if(!Cart::where('id', $id)->first())
+        if (!Cart::where('id', $id)->first())
             return ['status' => 'Este produto não existe no carrinho'];
 
         $cart = Cart::where('id', $id)->first();
 
-        $estoque = ProductStock::where('id_product', $cart-> id_product)->first();
+        $product = Product::where('id', $cart->id_product)->first();
+
+        $estoque = ProductStock::where('id_product', $product->id_product_stock)->first();
 
         if (!$estoque)
-        throw new Exception('Este produto não possui estoque cadastrado');
+            throw new Exception('Este produto não possui estoque cadastrado');
 
-        $estoque->stock += $cart['qtd'];
+        $estoque->stock += (($cart['qtd'] / 100) * $product->reason);
         $estoque->save();
 
 
@@ -116,7 +128,7 @@ class CartController extends Controller
      */
     public function dropProductsPerUser($id_user)
     {
-        if(!Cart::where('id_user', $id_user)->first())
+        if (!Cart::where('id_user', $id_user)->first())
             return ['status' => 'este usuario não possui produtos no carrinho'];
 
         $array = ['status' => 'All deleted '];
