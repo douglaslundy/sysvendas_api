@@ -20,9 +20,31 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Sale::with(['itens', 'client'])->orderBy('id', 'desc')->get();
+        // return Sale::with(['itens', 'client'])->orderBy('id', 'desc')->get();
+        $query =  Sale::query();
+
+        if ($request->has('year')) {
+            $query->whereYear('sale_date', '=', $request->year);
+        }
+        if ($request->has('month')) {
+            $query->whereMonth('sale_date', '=', $request->month);
+        }
+        if ($request->has('day')) {
+            $query->whereDay('sale_date', '=', $request->day);
+        }
+        if ($request->has('date_begin')) {
+            $query->whereDate('sale_date', '>=', $request->date_begin);
+        }
+        if ($request->has('date_end')) {
+            $query->whereDate('sale_date', '<=', $request->date_end);
+        }
+        if ($request->has('date')) {
+            $query->whereDate('sale_date', '=', $request->date);
+        }
+
+        return $query->with(['itens', 'client'])->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -35,7 +57,7 @@ class SaleController extends Controller
     {
         $form = $request->all();
 
-        if($form['type_sale'] == "in_cash"){
+        if ($form['type_sale'] == "in_cash") {
             $form['pay_date'] = new DateTime();
         }
 
