@@ -21,7 +21,8 @@ class Sale extends Model
         'check',
         'cash',
         'card',
-        'total_sale'
+        'total_sale',
+        'discount'
     ];
 
 

@@ -76,7 +76,7 @@ class SaleController extends Controller
         }
 
         if ($sale->type_sale == "on_term")
-            $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale);
+            $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
 
         return $this->dropProductsPerUser($sale->id_user);
     }
@@ -125,14 +125,14 @@ class SaleController extends Controller
         return Cart::where('id_user', $id_user)->delete();
     }
 
-    public function updateDebitBalanceClient($id_client, $value)
+    public function updateDebitBalanceClient($id_client, $total_sale, $discount)
     {
         $client = Client::where('id', $id_client)->first();
 
         if (!$client)
             return ['status' => 'este usuario não possui produtos no carrinho'];
 
-        $client->debit_balance += $value;
+        $client->debit_balance += ($total_sale - $discount);
         return $client->update();
     }
 
@@ -161,7 +161,7 @@ class SaleController extends Controller
                     // $sale->check = $sale->check;
                     $sale->pay_date = new DateTime();
                     $sale->save();
-                    $payClient += $sale->total_sale;
+                    $payClient += ($sale->total_sale - $sale->discount);
                     $sales += 1;
                 }
             }
