@@ -78,7 +78,8 @@ class SaleController extends Controller
         if ($sale->type_sale == "on_term")
             $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
 
-        return $this->dropProductsPerUser($sale->id_user);
+        // $query =  Sale::query();
+        return ([$this->dropProductsPerUser($sale->id_user), "sale" => [...Sale::query()->with(['itens', 'client'])->orderBy('id', 'desc')->where('id', $sale->id)->get()] ]);
     }
 
     /**
