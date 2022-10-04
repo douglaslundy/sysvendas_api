@@ -41,8 +41,8 @@ class CartController extends Controller
 
         $estoque->stock -= ($cart['qtd'] * $cart['reason']);
 
-        if (!$cart['qtd'] * $cart['reason'] > $estoque->stock )
-            throw new Exception('Produto sem estoque para venda desejada');
+        // if (!$cart['qtd'] * $cart['reason'] > $estoque->stock )
+        //     throw new Exception('Produto sem estoque para venda desejada');
 
         $estoque->save();
 
