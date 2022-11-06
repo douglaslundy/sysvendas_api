@@ -37,7 +37,7 @@ class ProductController extends Controller
 
         $stock = new ProductStock();
         $stock->id_product = $product->id;
-        $stock->stock = $request->input('stock');
+        $stock->stock = $request->input('stock') != null ? $request->input('stock') : 100;
         $stock->save();
 
         if ($product->id_product_stock == null) {
