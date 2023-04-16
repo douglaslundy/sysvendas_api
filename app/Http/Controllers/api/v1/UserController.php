@@ -48,7 +48,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return User::where('active', true)->find($id) ? User::find($id) : ['error' => '404'];
+        // return User::where('active', true)->find($id) ? User::find($id) : ['error' => '404'];
+        return User::find($id) ? User::find($id) : ['error' => '404'];
     }
 
     /**
@@ -62,7 +63,16 @@ class UserController extends Controller
     {
         $array = ['status' => 'updated'];
         $data = $request->all();
-        $data['password'] = Hash::make($data['password']);
+
+        if ($request->input('password')) {
+
+            $data['password'] = Hash::make($data['password']);
+
+        } else {
+            $data['password'] = $user->password;
+        }
+
+
         $user->update($data);
         $array['user'] = $user;
         return $array;
