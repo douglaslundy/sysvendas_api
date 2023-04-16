@@ -10,17 +10,19 @@ class CheckTotalSale implements Rule
     private $check;
     private $cash;
     private $card;
+    private $discount;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($type_sale, $check, $cash, $card)
+    public function __construct($type_sale, $check, $cash, $card, $discount)
     {
         $this->type_sale = $type_sale;
         $this->check = $check;
         $this->cash = $cash;
         $this->card = $card;
+        $this ->discount = $discount;
     }
 
     /**
@@ -32,7 +34,7 @@ class CheckTotalSale implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $this->type_sale == 'in_cash' ? ($value <= ($this->check + $this->cash + $this->card)) : true;
+        return $this->type_sale == 'in_cash' ? (($value - $this->discount) <= ($this->check + $this->cash + $this->card)) : true;
     }
 
     /**

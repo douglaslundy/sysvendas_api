@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'profile' => 'admin',
             'name' => 'RONALDO MIGLIORINI  JUNIOR',
-            'email' => '@gmail.com',
+            'email' => 't@gmail.com',
             'cpf' => '14980477690',
             'password' => Hash::make('12345'),
             'active' => 1
