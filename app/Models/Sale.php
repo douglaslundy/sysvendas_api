@@ -8,16 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Sale extends Model
 {
     use HasFactory;
-    public $timestamps = false;
+    public $timestamps = true;
     protected $hidden = ['id_client'];
     protected $fillable = [
         'id_user',
         'id_client',
-        'sale_date',
         'paied',
         'type_sale',
         'due_date',
-        'pay_date',
         'check',
         'cash',
         'card',

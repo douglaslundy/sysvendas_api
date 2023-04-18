@@ -26,22 +26,22 @@ class SaleController extends Controller
         $query =  Sale::query();
 
         if ($request->has('year')) {
-            $query->whereYear('sale_date', '=', $request->year);
+            $query->whereYear('created_at', '=', $request->year);
         }
         if ($request->has('month')) {
-            $query->whereMonth('sale_date', '=', $request->month);
+            $query->whereMonth('created_at', '=', $request->month);
         }
         if ($request->has('day')) {
-            $query->whereDay('sale_date', '=', $request->day);
+            $query->whereDay('created_at', '=', $request->day);
         }
         if ($request->has('date_begin')) {
-            $query->whereDate('sale_date', '>=', $request->date_begin);
+            $query->whereDate('created_at', '>=', $request->date_begin);
         }
         if ($request->has('date_end')) {
-            $query->whereDate('sale_date', '<=', $request->date_end);
+            $query->whereDate('created_at', '<=', $request->date_end);
         }
         if ($request->has('date')) {
-            $query->whereDate('sale_date', '=', $request->date);
+            $query->whereDate('created_at', '=', $request->date);
         }
 
         return $query->with(['itens', 'client'])->orderBy('id', 'desc')->get();
@@ -57,9 +57,9 @@ class SaleController extends Controller
     {
         $form = $request->all();
 
-        if ($form['type_sale'] == "in_cash") {
-            $form['pay_date'] = new DateTime();
-        }
+        // if ($form['type_sale'] == "in_cash") {
+        //     $form['updated_at'] = new DateTime();
+        // }
 
         $sale = Sale::create($form);
 
@@ -157,11 +157,8 @@ class SaleController extends Controller
 
                 if ($sale) {
                     $sale->paied = "yes";
-                    // $sale->cash = $sale->cash;
-                    // $sale->card = $sale->card;
-                    // $sale->check = $sale->check;
-                    $sale->pay_date = new DateTime();
-                    $sale->save();
+                    // $sale->pay_date = new DateTime();
+                    $sale->update();
                     $payClient += ($sale->total_sale - $sale->discount);
                     $sales += 1;
                 }
@@ -171,7 +168,7 @@ class SaleController extends Controller
 
             if ($client) {
                 $client->debit_balance -= $payClient;
-                $client->save();
+                $client->update();
             }
 
             return  "O pagamento de $sales vendas no total de R$ " . $payClient / 100 . " foi realizado com sucesso";

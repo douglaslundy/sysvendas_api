@@ -36,7 +36,7 @@ class SaleRequest extends FormRequest
             "paied" => ['string', 'required', Rule::in('yes','no')],
             "type_sale" => ['string', 'required',  Rule::in('in_cash', 'on_term'), new IfExistsClientInSale(request()->input('id_client'))],
             "due_date" => ['date', 'nullable'],
-            "pay_date" => ['date', 'nullable'],
+            // "pay_date" => ['date', 'nullable'],
             "chek" => ['integer', 'nullable'],
             "cash" => ['integer', 'nullable'],
             "discount" => ['integer', 'nullable'],
