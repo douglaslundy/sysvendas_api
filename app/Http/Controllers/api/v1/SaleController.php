@@ -75,7 +75,7 @@ class SaleController extends Controller
             $item->save();
         }
 
-        if ($sale->type_sale == "on_term")
+        if ($sale->type_sale == "on_term" && $sale->paied == "no")
             $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
 
         // $query =  Sale::query();
