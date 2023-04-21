@@ -74,12 +74,17 @@ class SaleController extends Controller
             $item->item_value = $product->sale_value;
             $item->save();
         }
+        if ($sale->type_sale == "on_term")
+            $sale->paied = 'no';
+
+        if ($sale->type_sale == "on_term" && $sale->paied !== "no")
+            throw new Exception('ocorreu um erro nesta transação, por favor verifique se a mesma foi concluida, se nao tente novamente, ou fale com suporte');
 
         if ($sale->type_sale == "on_term" && $sale->paied == "no")
             $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
 
         // $query =  Sale::query();
-        return ([$this->dropProductsPerUser($sale->id_user), "sale" => [...Sale::query()->with(['itens', 'client'])->orderBy('id', 'desc')->where('id', $sale->id)->get()] ]);
+        return ([$this->dropProductsPerUser($sale->id_user), "sale" => [...Sale::query()->with(['itens', 'client'])->orderBy('id', 'desc')->where('id', $sale->id)->get()]]);
     }
 
     /**
