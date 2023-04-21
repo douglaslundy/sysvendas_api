@@ -57,8 +57,6 @@ class SaleController extends Controller
     {
         $form = $request->all();
 
-
-
         if ($form['type_sale'] == "on_term")
             $form['paied'] = 'no';
 
@@ -130,7 +128,7 @@ class SaleController extends Controller
         return Cart::where('id_user', $id_user)->delete();
     }
 
-    public function updateDebitBalanceClient($id_client, $total_sale, $discount)
+    public function updateDebitBalanceClient($id_client, $total_sale, $discount = 0)
     {
         $client = Client::where('id', $id_client)->first();
 
