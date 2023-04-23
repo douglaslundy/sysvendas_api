@@ -20,7 +20,8 @@ class Sale extends Model
         'cash',
         'card',
         'total_sale',
-        'discount'
+        'discount',
+        'obs'
     ];
 
 

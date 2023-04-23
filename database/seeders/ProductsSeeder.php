@@ -22,7 +22,6 @@ class ProductsSeeder extends Seeder
             "id_unity" => 4,
             "id_category" => 5,
             "cost_value" => 50,
-            "stock" => 0,
             "sale_value" => 155,
             "active" => 1
           ]);
