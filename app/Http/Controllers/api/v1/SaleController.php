@@ -10,8 +10,8 @@ use App\Models\ItensOnSale;
 
 use App\Http\Requests\SaleRequest;
 use App\Models\Client;
-use DateTime;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
@@ -53,6 +53,7 @@ class SaleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(SaleRequest $request)
     {
         $form = $request->all();
@@ -61,27 +62,38 @@ class SaleController extends Controller
             $form['paied'] = 'no';
 
         if ($form['type_sale'] == "on_term" && $form['paied'] !== "no")
-            throw new Exception('ocorreu um erro nesta transação, por favor verifique se a mesma foi concluida, se nao tente novamente, ou fale com suporte');
+            throw new Exception('Ocorreu um erro nesta transação, por favor verifique se a mesma foi concluída, se não tente novamente, ou fale com suporte.');
 
-        $sale = Sale::create($form);
+        $sale = null;
 
-        $Products = Cart::where('id_user', $request->id_user)->get();
+        // a variavel $sale abaixo inserida dentro do metodo transaction Sem o operador &, a variável $sale dentro da função anônima seria uma cópia da variável original,
+        //  e quaisquer alterações feitas dentro da função não seriam refletidas fora dela.
 
-        foreach ($Products as $product) {
-            $item = new ItensOnSale();
-            $item->id_sale = $sale->id;
-            $item->id_user = $sale->id_user;
-            $item->id_product = $product->id_product;
-            $item->qtd = $product->qtd;
-            $item->item_value = $product->sale_value;
-            $item->save();
-        }
+        DB::transaction(function () use ($form, $request, &$sale) {
+            $sale = Sale::create($form);
 
-        if ($sale->type_sale == "on_term" && $sale->paied == "no")
-            $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
+            $products = Cart::where('id_user', $request->id_user)->get();
 
-        // $query =  Sale::query();
-        return ([$this->dropProductsPerUser($sale->id_user), "sale" => [...Sale::query()->with(['itens', 'client'])->orderBy('id', 'desc')->where('id', $sale->id)->get()]]);
+            foreach ($products as $product) {
+                $item = new ItensOnSale();
+                $item->id_sale = $sale->id;
+                $item->id_user = $sale->id_user;
+                $item->id_product = $product->id_product;
+                $item->qtd = $product->qtd;
+                $item->item_value = $product->sale_value;
+                $item->save();
+            }
+
+            if ($sale->type_sale == "on_term" && $sale->paied == "no") {
+                $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
+            }
+
+            $this->dropProductsPerUser($sale->id_user);
+        }, 5);
+
+        return [
+            "sale" => Sale::with(['itens', 'client'])->orderBy('id', 'desc')->where('id', $sale->id)->get()
+        ];
     }
 
     /**
@@ -115,7 +127,8 @@ class SaleController extends Controller
      */
     public function destroy(Sale  $sale)
     {
-        return $sale->delete($sale);
+        // return $sale->delete($sale);
+        return ['error' => 'The sale don´t can deleted'];
     }
 
 
@@ -147,35 +160,47 @@ class SaleController extends Controller
         return Sale::where('id_client', $id_client)->where('paied', $paied)->with(['itens', 'client'])->orderBy('id', 'desc')->get();
     }
 
+
     public function paySale(Request $request)
     {
-        if ($request->id_sales) {
+        if (!$request->id_sales) {
+            return "Informe pelo menos uma venda";
+        }
 
-            $payClient = 0;
-            $sales = 0;
+        $payClient = 0;
+        $sales = 0;
 
-            foreach ($request->id_sales as $id) {
-                $sale = Sale::where('id', $id)->where('id_client', $request->id_client)->where('paied', 'no')->first();
+        DB::beginTransaction();
 
-                if ($sale) {
-                    $sale->paied = "yes";
-                    // $sale->pay_date = new DateTime();
-                    $sale->update();
-                    $payClient += ($sale->total_sale - $sale->discount);
-                    $sales += 1;
+        try {
+            $sales = Sale::whereIn('id', $request->id_sales)
+                ->where('id_client', $request->id_client)
+                ->where('paied', 'no')
+                ->lockForUpdate()
+                ->update(['paied' => 'yes']);
+
+            if ($sales) {
+                $payClient = Sale::whereIn('id', $request->id_sales)
+                    ->where('id_client', $request->id_client)
+                    ->where('paied', 'yes')
+                    ->sum(DB::raw('total_sale - discount'));
+
+                $client = Client::where('id', $request->id_client)
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($client) {
+                    $client->debit_balance -= $payClient;
+                    $client->update();
                 }
             }
 
-            $client = Client::where('id', $request->id_client)->first();
+            DB::commit();
 
-            if ($client) {
-                $client->debit_balance -= $payClient;
-                $client->update();
-            }
-
-            return  "O pagamento de $sales vendas no total de R$ " . $payClient / 100 . " foi realizado com sucesso";
-        } else {
-            return "informe pelo menos uma venda";
+            return "O pagamento de $sales vendas no total de R$ " . $payClient / 100 . " foi realizado com sucesso";
+        } catch (Exception $e) {
+            DB::rollback();
+            throw $e;
         }
     }
 }
