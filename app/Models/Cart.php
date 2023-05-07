@@ -18,8 +18,8 @@ class Cart extends Model
         'qtd'
     ];
 
-    public function product(){
+    public function product()
+    {
         return $this->hasOne(Product::class, 'id', 'id_product');
     }
-
 }

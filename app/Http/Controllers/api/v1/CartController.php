@@ -39,8 +39,12 @@ class CartController extends Controller
         if (!$estoque)
             throw new Exception('Este produto não possui estoque cadastrado');
 
-        $estoque->stock -= ($cart['qtd'] * $cart['reason']);
+        $estoque->stock -= ($cart['qtd'] * floatval(str_replace(",", ".", $cart['reason'])));
 
+        // throw new Exception($cart['qtd']);
+        // throw new Exception("quantidade é " . $cart['qtd'] . " Razao é " . floatval(str_replace(",", ".", $cart['reason'])));
+
+       //esse if proibe inserir um produto no carrinho em uma quantidade maior que disponivel em estoque
         // if (!$cart['qtd'] * $cart['reason'] > $estoque->stock )
         //     throw new Exception('Produto sem estoque para venda desejada');
 
@@ -83,11 +87,32 @@ class CartController extends Controller
         if (!Cart::where('id', $id)->first())
             return ['status' => 'Este produto não existe no carrinho'];
 
+        $estoque = ProductStock::where('id_product', $request['product']['id_product_stock'])->first();
+
+        if (!$estoque)
+            throw new Exception('Este produto não possui estoque cadastrado');
+
         $array = ['status' => 'updated'];
         $cart = Cart::where('id', $id)->first();
+
+        // throw new Exception($cart->qtd);
+        // throw new Exception($cart['product']['reason']);
+        // throw new Exception("quantidade atual é " . $cart['qtd'] . " Razao é " . $request['product']['reason'] . " a quantidade enviada é " . $request->input('qtd') );
+
+        if ($cart->qtd > $request->input('qtd'))
+            $estoque->stock += (($cart->qtd - $request->input('qtd')) * floatval(str_replace(",", ".",$request['product']['reason'])));
+
+        if ($cart->qtd < $request->input('qtd'))
+            $estoque->stock -= (($request->input('qtd') - $cart->qtd) * floatval(str_replace(",", ".",$request['product']['reason'])));
+
+
         $cart['qtd'] = $request->input('qtd');
+
         $cart['obs'] = $request->input('obs');
-        $cart->update();
+
+        $cart->save();
+        $estoque->save();
+
         $array['cart'] = $cart;
         return $array;
     }
