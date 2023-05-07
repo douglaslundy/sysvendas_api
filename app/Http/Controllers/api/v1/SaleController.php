@@ -80,6 +80,7 @@ class SaleController extends Controller
                 $item->id_user = $sale->id_user;
                 $item->id_product = $product->id_product;
                 $item->qtd = $product->qtd;
+                $item->obs = $product->obs;
                 $item->item_value = $product->sale_value;
                 $item->save();
             }

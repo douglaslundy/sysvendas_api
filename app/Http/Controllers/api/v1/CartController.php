@@ -86,6 +86,7 @@ class CartController extends Controller
         $array = ['status' => 'updated'];
         $cart = Cart::where('id', $id)->first();
         $cart['qtd'] = $request->input('qtd');
+        $cart['obs'] = $request->input('obs');
         $cart->update();
         $array['cart'] = $cart;
         return $array;
