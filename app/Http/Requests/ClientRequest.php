@@ -28,7 +28,7 @@ class ClientRequest extends FormRequest
         return [
              'full_name' => [new CheckIfFullName,'string', 'required','min:5','max:100'],
              'surname' => 'nullable|string|max:50',
-             'cpf_cnpj' => 'string|nullable|max:18|unique:clients,cpf_cnpj,'.request()->id,
+             'cpf_cnpj' => 'required|string|max:18|unique:clients,cpf_cnpj,'.request()->id,
              'email' =>['string','nullable','email', 'max:100'],
              'phone' => [new PhoneValidation],
              'im' => 'string|max:50|nullable|unique:clients,im,'.request()->id,
@@ -48,6 +48,8 @@ class ClientRequest extends FormRequest
         return [
             'full_name.required' => 'o Campo nome e obrigatorio',
             'full_name.min' =>'O Nome deve possuir no minimo 5 letras',
+            'cpf_cnpj.required' =>'O campo CPF / CNPJ é obrigatório',
+            'full_name.unique' =>'O CPF/CNPJ informado ja foi utilizado',
             'im.max' =>'O campo Inscrição Municipal não pode conter mais que 50 caracteres',
             'ie.max' =>'O campo Inscrição Estadual não pode conter mais que 50 caracteres',
         ];
