@@ -49,7 +49,7 @@ class ClientRequest extends FormRequest
             'full_name.required' => 'o Campo nome e obrigatorio',
             'full_name.min' =>'O Nome deve possuir no minimo 5 letras',
             'cpf_cnpj.required' =>'O campo CPF / CNPJ é obrigatório',
-            'full_name.unique' =>'O CPF/CNPJ informado ja foi utilizado',
+            'cpf_cnpj.unique' =>'O CPF/CNPJ informado ja foi utilizado',
             'im.max' =>'O campo Inscrição Municipal não pode conter mais que 50 caracteres',
             'ie.max' =>'O campo Inscrição Estadual não pode conter mais que 50 caracteres',
         ];
