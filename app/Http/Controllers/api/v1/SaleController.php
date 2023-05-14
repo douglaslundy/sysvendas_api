@@ -66,29 +66,21 @@ class SaleController extends Controller
 
         $sale = null;
 
-        // a variavel $sale abaixo inserida dentro do metodo transaction Sem o operador &, a variável $sale dentro da função anônima seria uma cópia da variável original,
-        //  e quaisquer alterações feitas dentro da função não seriam refletidas fora dela.
+
+        // a variavel $sale abaixo é inserida dentro do metodo transaction com operador & para referenciar a variavel original e não criar uma copia dela, pois se criasse
+        // uma copia quaisquer alterações feitas dentro da função não seriam refletidas fora dela.
 
         DB::transaction(function () use ($form, $request, &$sale) {
 
-            try{
+            try {
                 $sale = Sale::create($form);
 
-            $products = Cart::where('id_user', $request->id_user)->get();
+                $products = Cart::where('id_user', $request->id_user)->get();
 
-            foreach ($products as $product) {
-                $item = new ItensOnSale();
-                $item->id_sale = $sale->id;
-                $item->id_user = $sale->id_user;
-                $item->id_product = $product->id_product;
-                $item->qtd = $product->qtd;
-                $item->obs = $product->obs;
-                $item->item_value = $product->sale_value;
-                $item->save();
-            }
+                if($this->saveItensOnSale($products, $sale->id, $sale->id_user))
+                    $this->dropProductsPerUser($sale->id_user);
 
-            $this->dropProductsPerUser($sale->id_user);
-            } catch(Exception $err) {
+            } catch (Exception $err) {
 
                 throw new Exception('Ocorreu um erro ' . $err);
 
@@ -97,7 +89,6 @@ class SaleController extends Controller
                     $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
                 }
             }
-
         }, 5);
 
         return [
@@ -148,6 +139,21 @@ class SaleController extends Controller
             return ['status' => 'este usuario não possui produtos no carrinho'];
 
         return Cart::where('id_user', $id_user)->delete();
+    }
+
+    public function saveItensOnSale($products, $saleId, $userId)
+    {
+        foreach ($products as $product) {
+            $item = new ItensOnSale();
+            $item->id_sale = $saleId;
+            $item->id_user = $userId;
+            $item->id_product = $product->id_product;
+            $item->qtd = $product->qtd;
+            $item->obs = $product->obs;
+            $item->item_value = $product->sale_value;
+            $item->save();
+        }
+        return true;
     }
 
     public function updateDebitBalanceClient($id_client, $total_sale, $discount = 0)
