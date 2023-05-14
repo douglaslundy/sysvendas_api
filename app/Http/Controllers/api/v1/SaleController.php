@@ -70,7 +70,9 @@ class SaleController extends Controller
         //  e quaisquer alterações feitas dentro da função não seriam refletidas fora dela.
 
         DB::transaction(function () use ($form, $request, &$sale) {
-            $sale = Sale::create($form);
+
+            try{
+                $sale = Sale::create($form);
 
             $products = Cart::where('id_user', $request->id_user)->get();
 
@@ -85,11 +87,17 @@ class SaleController extends Controller
                 $item->save();
             }
 
-            if ($sale->type_sale == "on_term" && $sale->paied == "no") {
-                $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
+            $this->dropProductsPerUser($sale->id_user);
+            } catch(Exception $err) {
+
+                throw new Exception('Ocorreu um erro ' . $err);
+
+            } finally {
+                if ($sale->type_sale == "on_term" && $sale->paied == "no") {
+                    $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
+                }
             }
 
-            $this->dropProductsPerUser($sale->id_user);
         }, 5);
 
         return [

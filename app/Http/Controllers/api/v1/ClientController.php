@@ -8,6 +8,7 @@ use App\Http\Requests\ClientRequest;
 use App\Models\Client;
 use DateTime;
 use ErrorException;
+use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -78,8 +79,7 @@ class ClientController extends Controller
         // $client->delete($client);
 
         if($client->debit_balance != 0){
-           throw new HttpException(304);
-
+           throw new Exception("Este cliente possui débitos em aberto e não pode ser excluido", 304);
         }
 
         Client::where('id', $client->id)->update(['active' => 0, 'inactive_date' => new DateTime()]);
