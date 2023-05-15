@@ -139,6 +139,11 @@ class BudgetController extends Controller
         return true;
     }
 
+    public function budgetsPerClient($id_client)
+    {
+        return Budget::where('id_client', $id_client)->with(['itens', 'client'])->orderBy('id', 'desc')->get();
+    }
+
 
     /**
      * Remove the specified resource from storage.

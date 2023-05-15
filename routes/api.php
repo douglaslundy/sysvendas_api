@@ -13,6 +13,7 @@ use App\Http\Controllers\api\v1\UnitController;
 use App\Http\Controllers\api\v1\AddressController;
 use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\AuthController;
+use App\Http\Controllers\api\v1\BudgetController;
 
 Route::get('/ping', function () {
     return ['pong' => true];
@@ -37,7 +38,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('categorie', CategorieController::class);
     Route::apiResource('cart', CartController::class);
     Route::delete('cart/drop/{id_user}', [CartController::class, 'dropProductsPerUser']);
+
     Route::apiResource('products', ProductController::class);
+    Route::post('products/updateValueCategories', [ProductController::class, 'updateValueCategories']);
+
     Route::apiResource('cheks', ChekController::class);
 
     Route::apiResource('sales', SaleController::class);
@@ -47,5 +51,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('address', AddressController::class);
     Route::apiResource('units', UnitController::class);
     Route::apiResource('users', UserController::class);
-    Route::post('products/updateValueCategories', [ProductController::class, 'updateValueCategories']);
+
+    Route::apiResource('budgets', BudgetController::class);
+    Route::get('budgets/budgetsPerClient/{id_client}', [BudgetController::class, 'budgetsPerClient']);
 });
