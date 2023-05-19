@@ -9,7 +9,9 @@ use App\Models\Cart;
 use App\Models\ItensOnSale;
 
 use App\Http\Requests\SaleRequest;
+use App\Models\Budget;
 use App\Models\Client;
+use App\Models\ItensOnBudget;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -77,13 +79,11 @@ class SaleController extends Controller
 
                 $products = Cart::where('id_user', $request->id_user)->get();
 
-                if($this->saveItensOnSale($products, $sale->id, $sale->id_user))
+                if ($this->saveItensOnSale($products, $sale->id, $sale->id_user))
                     $this->dropProductsPerUser($sale->id_user);
-
             } catch (Exception $err) {
 
                 throw new Exception('Ocorreu um erro ' . $err);
-
             } finally {
                 if ($sale->type_sale == "on_term" && $sale->paied == "no") {
                     $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
@@ -141,6 +141,22 @@ class SaleController extends Controller
         return Cart::where('id_user', $id_user)->delete();
     }
 
+    public function dropProductsPerUserFromBudget($id_budget)
+    {
+        if (!ItensOnBudget::where('id_sale', $id_budget)->first())
+            return ['status' => 'este usuario não possui produtos no carrinho'];
+
+        return ItensOnBudget::where('id_sale', $id_budget)->delete();
+    }
+
+    public function dropBudget($id_budget)
+    {
+        if (!Budget::where('id', $id_budget)->first())
+            return ['status' => 'este orçamento não existe!'];
+
+        return Budget::where('id', $id_budget)->delete();
+    }
+
     public function saveItensOnSale($products, $saleId, $userId)
     {
         foreach ($products as $product) {
@@ -150,7 +166,7 @@ class SaleController extends Controller
             $item->id_product = $product->id_product;
             $item->qtd = $product->qtd;
             $item->obs = $product->obs;
-            $item->item_value = $product->sale_value;
+            $item->item_value = $product->item_value;
             $item->save();
         }
         return true;
@@ -217,5 +233,55 @@ class SaleController extends Controller
             DB::rollback();
             throw $e;
         }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function changeBudgetToSale(SaleRequest $request)
+    {
+        $form = $request->all();
+
+        if ($form['type_sale'] == "on_term")
+            $form['paied'] = 'no';
+
+        if ($form['type_sale'] == "on_term" && $form['paied'] !== "no")
+            throw new Exception('Ocorreu um erro nesta transação, por favor verifique se a mesma foi concluída, se não tente novamente, ou fale com suporte.');
+
+        $sale = null;
+
+
+        // a variavel $sale abaixo é inserida dentro do metodo transaction com operador & para referenciar a variavel original e não criar uma copia dela, pois se criasse
+        // uma copia quaisquer alterações feitas dentro da função não seriam refletidas fora dela.
+
+        DB::transaction(function () use ($form, $request, &$sale) {
+
+            try {
+                $sale = Sale::create($form);
+
+                // $products = ItensOnBudget::where('id_user', $request->id_user)->get();
+                $products = ItensOnBudget::where('id_sale', $request->id_budget)->get();
+
+                if ($this->saveItensOnSale($products, $sale->id, $sale->id_user)) {
+                    $this->dropProductsPerUserFromBudget($request->id_budget);
+                    $this->dropBudget($request->id_budget);
+                }
+            } catch (Exception $err) {
+
+                throw new Exception('Ocorreu um erro ' . $err);
+            } finally {
+                if ($sale->type_sale == "on_term" && $sale->paied == "no") {
+                    $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
+                }
+            }
+        }, 5);
+
+        return [
+            "sale" => Sale::with(['itens', 'client'])->orderBy('id', 'desc')->where('id', $sale->id)->get()
+        ];
     }
 }

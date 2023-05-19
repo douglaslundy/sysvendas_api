@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('id_user');
             $table->integer('id_product');
-            $table->integer('sale_value')->default(0);
+            $table->integer('item_value')->default(0);
             $table->integer('qtd');
         });
     }

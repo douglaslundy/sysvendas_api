@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('sales', SaleController::class);
     Route::get('sales/salesPerClient/{id_client}/{paied}', [SaleController::class, 'salesPerClient']);
     Route::post('sales/pay', [SaleController::class, 'paySale']);
+    Route::post('sales/changeBudgetToSale', [SaleController::class, 'changeBudgetToSale']);
 
     Route::apiResource('address', AddressController::class);
     Route::apiResource('units', UnitController::class);

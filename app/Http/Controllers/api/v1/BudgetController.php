@@ -133,7 +133,7 @@ class BudgetController extends Controller
             $item->id_product = $product->id_product;
             $item->qtd = $product->qtd;
             $item->obs = $product->obs;
-            $item->item_value = $product->sale_value;
+            $item->item_value = $product->item_value;
             $item->save();
         }
         return true;
