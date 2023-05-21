@@ -5,12 +5,14 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ClientRequest;
+use App\Models\Addresses;
 use App\Models\Client;
 use DateTime;
 use ErrorException;
 use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -22,7 +24,7 @@ class ClientController extends Controller
     public function index()
     {
         // return Client::where('active', true)->get();
-        return Client::where('active', true)->orderBy('full_name', 'asc')->get();
+        return Client::with(['addresses'])->where('active', true)->orderBy('full_name', 'asc')->get();
     }
 
     /**
@@ -33,10 +35,31 @@ class ClientController extends Controller
      */
     public function store(ClientRequest $request)
     {
-        $array = ['status' => 'created'];
-        $array['client'] = Client::create($request->all());
-        return $array;
+        DB::beginTransaction();
+        try {
+            $array = ['status' => 'created'];
 
+            $client = Client::create($request->all());
+
+            $address = new Addresses();
+            $address->id_client = $client->id;
+            $address->zip_code = $request->input('addresses.zip_code');
+            $address->city = $request->input('addresses.city');
+            $address->street = $request->input('addresses.street');
+            $address->number = $request->input('addresses.number');
+            $address->district = $request->input('addresses.district');
+            $address->complement = $request->input('addresses.complement');
+
+            $address->save();
+            $array['client'] = $client;
+
+            DB::commit();
+
+            return $array;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
 
     /**
@@ -59,13 +82,38 @@ class ClientController extends Controller
      */
     public function update(ClientRequest $request, Client $client)
     {
-        // return Client::update($request->all());
 
-        $array = ['status' => 'updated'];
-        $client->update($request->all());
-        $array['client'] = $client;
-        return $array;
+        DB::beginTransaction();
+        try {
+            $array = ['status' => 'updated'];
+            $client->update($request->all());
+            $array['client'] = $client;
+
+            $address = Addresses::where('id_client', $client->id)->first();
+
+            if (!$address)
+                $address = new Addresses();
+
+            $address->id_client = $client->id;
+            $address->zip_code = $request->input('addresses.zip_code');
+            $address->city = $request->input('addresses.city');
+            $address->street = $request->input('addresses.street');
+            $address->number = $request->input('addresses.number');
+            $address->district = $request->input('addresses.district');
+            $address->complement = $request->input('addresses.complement');
+
+            $address->save();
+            $array['client'] = $client;
+
+            DB::commit();
+
+            return $array;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -78,8 +126,8 @@ class ClientController extends Controller
         $array = ['status' => 'inactivated'];
         // $client->delete($client);
 
-        if($client->debit_balance != 0){
-           throw new Exception("Este cliente possui débitos em aberto e não pode ser excluido", 304);
+        if ($client->debit_balance != 0) {
+            throw new Exception("Este cliente possui débitos em aberto e não pode ser excluido", 304);
         }
 
         Client::where('id', $client->id)->update(['active' => 0, 'inactive_date' => new DateTime()]);

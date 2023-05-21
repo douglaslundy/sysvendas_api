@@ -26,7 +26,6 @@ class Sale extends Model
 
 
     public function itens(){
-        // return $this->hasMany(ItensOnSale::class, 'id_sale')->with('product');
         return $this->hasMany(ItensOnSale::class, 'id_sale')->join('products', 'products.id', '=', 'itens_on_sale.id_product');
     }
 
