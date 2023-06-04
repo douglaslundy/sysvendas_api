@@ -42,7 +42,7 @@ class BudgetController extends Controller
             $query->whereDate('created_at', '=', $request->date);
         }
 
-        return $query->with(['itens', 'client'])->orderBy('id', 'desc')->get();
+        return $query->with(['itens', 'client', 'user'])->orderBy('id', 'desc')->get();
     }
 
     /**
@@ -53,24 +53,37 @@ class BudgetController extends Controller
      */
     public function store(StoreBudgetRequest $request)
     {
+        /**
+         *este metodo passou por uma refatoração, onde ele verifica se existe ou se recebe o id da pessoa que realizou a venda, id_seller,
+         *se existir ele altera o valor de id user na venda para o id do vendedor, mas continua apagando os produtos no carrinho utilizando
+         *o id de usuario obtido no request, id_user, que seria o equivalente ao usuario logado no sistema, para remover os produtos do carrinho
+         */
+
         $form = $request->all();
-
-
         $budget = null;
 
+        $id_user = null;
+
+        // if($request->id_seller) {
+        //     $id_user = $request->id_seller;
+        // } else {
+        //     $id_user = $request->id_user;
+        // }
+        $request->id_seller && $request->id_seller != null ?  $id_user = $request->id_seller : $id_user = $request->id_user;
 
         // a variavel $budget abaixo é inserida dentro do metodo transaction com operador & para referenciar a variavel original e não criar uma copia dela, pois se criasse
         // uma copia quaisquer alterações feitas dentro da função não seriam refletidas fora dela.
 
-        DB::transaction(function () use ($form, $request, &$budget) {
+        DB::transaction(function () use ($form, $request, $id_user, &$budget) {
 
             try {
+                $form['id_user'] = $id_user;
                 $budget = Budget::create($form);
 
                 $products = Cart::where('id_user', $request->id_user)->get();
 
                 if ($this->saveItensOnBudget($products, $budget->id, $budget->id_user))
-                    $this->dropProductsPerUser($budget->id_user);
+                    $this->dropProductsPerUser($request->id_user);
             } catch (Exception $err) {
 
                 throw new Exception('Ocorreu um erro ' . $err);
@@ -78,7 +91,7 @@ class BudgetController extends Controller
         }, 5);
 
         return [
-            "budget" => Budget::with(['itens', 'client'])->orderBy('id', 'desc')->where('id', $budget->id)->get()
+            "budget" => Budget::with(['itens', 'client', 'user'])->orderBy('id', 'desc')->where('id', $budget->id)->get()
         ];
     }
 
