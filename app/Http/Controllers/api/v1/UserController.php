@@ -21,6 +21,7 @@ class UserController extends Controller
     public function index()
     {
         return User::where('active', true)->orderBy('id', 'desc')->get();
+        // return User::with(['company'])->where('active', true)->orderBy('id', 'desc')->get();
     }
 
     /**

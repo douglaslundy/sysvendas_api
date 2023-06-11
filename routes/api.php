@@ -6,7 +6,7 @@ use App\Http\Controllers\api\v1\ClientController;
 use App\Http\Controllers\api\v1\SaleController;
 use App\Http\Controllers\api\v1\CartController;
 use App\Http\Controllers\api\v1\CategorieController;
-use App\Http\Controllers\api\v1\CompanyController;
+use App\Http\Controllers\api\v1\CompaniesController;
 use App\Http\Controllers\api\v1\ProductController;
 use App\Http\Controllers\api\v1\ChekController;
 use App\Http\Controllers\api\v1\UnitController;
@@ -33,7 +33,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/validate', [AuthController::class, 'validateToken']);
 
-    Route::apiResource('company', CompanyController::class);
+    Route::apiResource('companies', CompaniesController::class);
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('categorie', CategorieController::class);
     Route::apiResource('cart', CartController::class);
