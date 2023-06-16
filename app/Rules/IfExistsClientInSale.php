@@ -37,6 +37,6 @@ class IfExistsClientInSale implements Rule
      */
     public function message()
     {
-        return 'Sem cliente referenciado na venda!';
+        return 'Esta venda não pode acontecer sem que seja informado o cliente!';
     }
 }
