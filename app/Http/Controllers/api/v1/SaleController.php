@@ -235,6 +235,7 @@ class SaleController extends Controller
 
                 if ($client) {
                     $client->debit_balance -= $payClient;
+                    $client->marked = 0;
                     $client->update();
                 }
             }
@@ -300,5 +301,31 @@ class SaleController extends Controller
         return [
             "sale" => Sale::with(['itens', 'client', 'user'])->orderBy('id', 'desc')->where('id', $sale->id)->get()
         ];
+    }
+
+
+    public function blockCustomersWithOverdueSales()
+    {
+        $daysAgo = now()->subDays(45);
+
+        $sales = Sale::where('created_at', '<', $daysAgo)
+            ->where('type_sale', 'on_term')
+            ->where('paied', 'no')
+            ->get();
+
+        $clientIds = $sales->pluck('id_client')->unique();
+
+
+        $blockedClients = Client::whereIn('id', $clientIds)->where('marked', 0)->get();
+
+        // Você também pode optar por executar as atualizações em lotes para melhor desempenho
+       Client::whereIn('id', $clientIds)->where('marked', 0)->chunk(200, function ($clients) {
+            foreach ($clients as $client) {
+                    $client->marked = 1;
+                    $client->save();
+            }
+        });
+
+        return $blockedClients;
     }
 }

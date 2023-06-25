@@ -48,6 +48,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('sales/salesPerClient/{id_client}/{paied}', [SaleController::class, 'salesPerClient']);
     Route::post('sales/pay', [SaleController::class, 'paySale']);
     Route::post('sales/changeBudgetToSale', [SaleController::class, 'changeBudgetToSale']);
+    Route::get('sales/getBlockedClients/get', [SaleController::class, 'blockCustomersWithOverdueSales']);
+
+
+    // Route::apiResource('sales', SaleController::class);
+    // Route::get('sales/salesPerClient/{id_client}/{paied}', [SaleController::class, 'salesPerClient']);
+    // Route::get('sales/blocked-clients/get', [SaleController::class, 'blockCustomersWithOverdueSales'])->name('sales.getBlockedClients');
+    // Route::post('sales/pay', [SaleController::class, 'paySale']);
+    // Route::post('sales/changeBudgetToSale', [SaleController::class, 'changeBudgetToSale']);
+
+
 
     Route::apiResource('address', AddressController::class);
     Route::apiResource('units', UnitController::class);
