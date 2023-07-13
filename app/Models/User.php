@@ -25,6 +25,7 @@ class User extends Authenticatable
         'cpf',
         'active',
         'password',
+        'company_id',
         'inactive_date',
     ];
 
