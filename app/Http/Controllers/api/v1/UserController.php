@@ -88,14 +88,8 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $array = ['status' => 'inactivated'];
-        // $client->delete($client);
 
-        // if($user->debit_balance != 0){
-        //    throw new HttpException(304);
-
-        // }
-
-        User::where('id', $user->id)->update(['active' => 0, 'inactive_date' => new DateTime()]);
+        User::where('id', $user)->update(['active' => 0, 'inactive_date' => new DateTime()]);
         return $array;
     }
 }
