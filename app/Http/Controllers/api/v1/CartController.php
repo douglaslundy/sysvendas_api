@@ -52,8 +52,8 @@ class CartController extends Controller
 
         $array = ['status' => 'created'];
 
-        if (Cart::where('id_product', $cart['id_product'])->first()) {
-            $existedCart = Cart::where('id_product', $cart['id_product'])->first();
+        if (Cart::where('id_product', $cart['id_product'])->where('id_user', $cart['id_user'] )->first()) {
+            $existedCart = Cart::where('id_product', $cart['id_product'])->where('id_user', $cart['id_user'] )->first();
             $existedCart->qtd += $cart['qtd'];
             $existedCart->save();
             $array['cart'] = $existedCart;

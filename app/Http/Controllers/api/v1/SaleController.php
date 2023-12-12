@@ -114,7 +114,7 @@ class SaleController extends Controller
     }
 
 
-
+    // verifica se o request recebido do front esta atualizado com valor existente em banco
     public function checkIfSaleIsUpdatedWithCart($idUser, $total_sale)
     {
         $products = Cart::where('id_user', $idUser)->get();
