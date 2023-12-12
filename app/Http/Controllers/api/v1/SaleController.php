@@ -68,7 +68,7 @@ class SaleController extends Controller
         $form = $request->all();
 
 
-        if (!$this->checkIfSaleIsUpdatedWithCart($request->id_user, $request->total_sale))
+        if (!$this->checkIfSaleIsUpdatedWithCart($request->id_user, $request->total_sale, $request->total_itens))
             throw new Exception('Seu carrinho desta desatualizado, por favor atualize a página (de um F5) e tente novamente!');
 
         if ($form['type_sale'] == "on_term")
@@ -115,7 +115,7 @@ class SaleController extends Controller
 
 
     // verifica se o request recebido do front esta atualizado com valor existente em banco
-    public function checkIfSaleIsUpdatedWithCart($idUser, $total_sale)
+    public function checkIfSaleIsUpdatedWithCart($idUser, $total_sale, $total_itens)
     {
         $products = Cart::where('id_user', $idUser)->get();
 
@@ -123,7 +123,7 @@ class SaleController extends Controller
             return $product->item_value * $product->qtd;
         });
 
-        return $total_sale == ($total / 100);
+        return (count($products) == $total_itens) AND $total_sale == ($total / 100);
     }
 
     /**
