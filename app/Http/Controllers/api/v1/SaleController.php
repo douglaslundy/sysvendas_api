@@ -67,6 +67,10 @@ class SaleController extends Controller
 
         $form = $request->all();
 
+
+        if (!$this->checkIfSaleIsUpdatedWithCart($request->id_user, $request->total_sale))
+            throw new Exception('Seu carrinho desta desatualizado, por favor atualize a página (de um F5) e tente novamente!');
+
         if ($form['type_sale'] == "on_term")
             $form['paied'] = 'no';
 
@@ -107,6 +111,19 @@ class SaleController extends Controller
         return [
             "sale" => Sale::with(['itens', 'client', 'user'])->orderBy('id', 'desc')->where('id', $sale->id)->get()
         ];
+    }
+
+
+
+    public function checkIfSaleIsUpdatedWithCart($idUser, $total_sale)
+    {
+        $products = Cart::where('id_user', $idUser)->get();
+
+        $total = $products->sum(function($product) {
+            return $product->item_value * $product->qtd;
+        });
+
+        return $total_sale == ($total / 100);
     }
 
     /**
@@ -319,10 +336,10 @@ class SaleController extends Controller
         $blockedClients = Client::whereIn('id', $clientIds)->where('marked', 0)->get();
 
         // Você também pode optar por executar as atualizações em lotes para melhor desempenho
-       Client::whereIn('id', $clientIds)->where('marked', 0)->chunk(200, function ($clients) {
+        Client::whereIn('id', $clientIds)->where('marked', 0)->chunk(200, function ($clients) {
             foreach ($clients as $client) {
-                    $client->marked = 1;
-                    $client->save();
+                $client->marked = 1;
+                $client->save();
             }
         });
 
