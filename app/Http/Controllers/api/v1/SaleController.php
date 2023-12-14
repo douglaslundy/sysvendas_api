@@ -69,7 +69,7 @@ class SaleController extends Controller
 
 
         if (!$this->checkIfSaleIsUpdatedWithCart($request->id_user, $request->total_sale, $request->total_itens))
-            throw new Exception('Seu carrinho desta desatualizado, por favor atualize a página (de um F5) e tente novamente!');
+            throw new Exception('Seu carrinho está desatualizado, por favor feche a pagina, atualize a página (de um F5) e tente novamente!');
 
         if ($form['type_sale'] == "on_term")
             $form['paied'] = 'no';
