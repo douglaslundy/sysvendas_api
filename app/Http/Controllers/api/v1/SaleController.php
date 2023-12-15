@@ -123,7 +123,7 @@ class SaleController extends Controller
             return $product->item_value * $product->qtd;
         });
 
-        return (count($products) == $total_itens) AND $total_sale == ($total / 100);
+        return (count($products) == $total_itens) AND $total_sale == intval($total / 100);
     }
 
     /**
