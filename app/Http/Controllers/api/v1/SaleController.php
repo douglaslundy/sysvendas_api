@@ -49,6 +49,18 @@ class SaleController extends Controller
         return $query->with(['itens', 'client', 'user'])->orderBy('id', 'desc')->get();
     }
 
+    // verifica se o request recebido do front esta atualizado com valor existente em banco
+    public function checkIfSaleIsUpdatedWithCart($idUser, $total_sale, $total_itens)
+    {
+        $products = Cart::where('id_user', $idUser)->get();
+
+        $total = $products->sum(function ($product) {
+            return $product->item_value * $product->qtd;
+        });
+
+        return (count($products) == $total_itens) and $total_sale == intval($total / 100);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -111,19 +123,6 @@ class SaleController extends Controller
         return [
             "sale" => Sale::with(['itens', 'client', 'user'])->orderBy('id', 'desc')->where('id', $sale->id)->get()
         ];
-    }
-
-
-    // verifica se o request recebido do front esta atualizado com valor existente em banco
-    public function checkIfSaleIsUpdatedWithCart($idUser, $total_sale, $total_itens)
-    {
-        $products = Cart::where('id_user', $idUser)->get();
-
-        $total = $products->sum(function($product) {
-            return $product->item_value * $product->qtd;
-        });
-
-        return (count($products) == $total_itens) AND $total_sale == intval($total / 100);
     }
 
     /**
