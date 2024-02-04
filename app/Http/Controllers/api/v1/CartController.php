@@ -44,7 +44,7 @@ class CartController extends Controller
         // throw new Exception($cart['qtd']);
         // throw new Exception("quantidade é " . $cart['qtd'] . " Razao é " . floatval(str_replace(",", ".", $cart['reason'])));
 
-       //esse if proibe inserir um produto no carrinho em uma quantidade maior que disponivel em estoque
+        //esse if proibe inserir um produto no carrinho em uma quantidade maior que disponivel em estoque
         // if (!$cart['qtd'] * $cart['reason'] > $estoque->stock )
         //     throw new Exception('Produto sem estoque para venda desejada');
 
@@ -52,8 +52,8 @@ class CartController extends Controller
 
         $array = ['status' => 'created'];
 
-        if (Cart::where('id_product', $cart['id_product'])->where('id_user', $cart['id_user'] )->first()) {
-            $existedCart = Cart::where('id_product', $cart['id_product'])->where('id_user', $cart['id_user'] )->first();
+        if (Cart::where('id_product', $cart['id_product'])->where('id_user', $cart['id_user'])->first()) {
+            $existedCart = Cart::where('id_product', $cart['id_product'])->where('id_user', $cart['id_user'])->first();
             $existedCart->qtd += $cart['qtd'];
             $existedCart->save();
             $array['cart'] = $existedCart;
@@ -100,10 +100,10 @@ class CartController extends Controller
         // throw new Exception("quantidade atual é " . $cart['qtd'] . " Razao é " . $request['product']['reason'] . " a quantidade enviada é " . $request->input('qtd') );
 
         if ($cart->qtd > $request->input('qtd'))
-            $estoque->stock += (($cart->qtd - $request->input('qtd')) * floatval(str_replace(",", ".",$request['product']['reason'])));
+            $estoque->stock += (($cart->qtd - $request->input('qtd')) * floatval(str_replace(",", ".", $request['product']['reason'])));
 
         if ($cart->qtd < $request->input('qtd'))
-            $estoque->stock -= (($request->input('qtd') - $cart->qtd) * floatval(str_replace(",", ".",$request['product']['reason'])));
+            $estoque->stock -= (($request->input('qtd') - $cart->qtd) * floatval(str_replace(",", ".", $request['product']['reason'])));
 
 
         $cart['qtd'] = $request->input('qtd');
@@ -143,6 +143,16 @@ class CartController extends Controller
 
         $array = ['status' => 'deleted'];
         $cart->delete();
+        return $array;
+    }
+
+    public function cleanCartPerUser($id_user)
+    {
+        if (!Cart::where('id_user', $id_user)->first())
+            return ['status' => 'este usuario não possui produtos no carrinho'];
+
+        $array = ['status' => 'All deleted '];
+        Cart::where('id_user', $id_user)->delete();
         return $array;
     }
 

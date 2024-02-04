@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('categorie', CategorieController::class);
     Route::apiResource('cart', CartController::class);
     Route::delete('cart/drop/{id_user}', [CartController::class, 'dropProductsPerUser']);
+    Route::delete('cart/clean/{id_user}', [CartController::class, 'cleanCartPerUser']);
 
     Route::apiResource('products', ProductController::class);
     Route::post('products/updateValueCategories', [ProductController::class, 'updateValueCategories']);

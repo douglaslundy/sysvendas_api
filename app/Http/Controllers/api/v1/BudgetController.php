@@ -192,6 +192,9 @@ class BudgetController extends Controller
     public function sendBudgetToCart($budgetId, $idUser)
     {
         DB::beginTransaction();
+        if (Cart::where('id_user', $idUser)->first())
+            throw new Exception('Este usuario ja possui produtos no carrinho. por favor conclua sua antiga venda, ou limpe seu carrinho!');
+
         try {
             $itens = ItensOnBudget::where('id_sale', $budgetId)->get();
 
