@@ -139,17 +139,25 @@ class BudgetController extends Controller
 
     public function saveItensOnBudget($products, $saleId, $userId)
     {
-        foreach ($products as $product) {
-            $item = new ItensOnBudget();
-            $item->id_sale = $saleId;
-            $item->id_user = $userId;
-            $item->id_product = $product->id_product;
-            $item->qtd = $product->qtd;
-            $item->obs = $product->obs;
-            $item->item_value = $product->item_value;
-            $item->save();
+        DB::beginTransaction();
+
+        try {
+            foreach ($products as $product) {
+                $item = new ItensOnBudget();
+                $item->id_sale = $saleId;
+                $item->id_user = $userId;
+                $item->id_product = $product->id_product;
+                $item->qtd = $product->qtd;
+                $item->obs = $product->obs;
+                $item->item_value = $product->item_value;
+                $item->save();
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
-        return true;
     }
 
     public function budgetsPerClient($id_client)
@@ -157,6 +165,47 @@ class BudgetController extends Controller
         return Budget::where('id_client', $id_client)->with(['itens', 'client'])->orderBy('id', 'desc')->get();
     }
 
+
+    public function saveItensOnCart($itens, $userId)
+    {
+        foreach ($itens as $item) {
+            $cart = new Cart();
+            $cart->id_user    = $userId;
+            $cart->id_product = $item->id_product;
+            $cart->item_value = $item->item_value;
+            $cart->qtd        = $item->qtd;
+            $cart->obs        = $item->obs;
+            $cart->save();
+        }
+        return true;
+    }
+
+    public function dropProductsPerBudget($id)
+    {
+        if (!ItensOnBudget::where('id_sale', $id)->first())
+            return ['status' => 'este orçamento não possui produtos'];
+
+        return ItensOnBudget::where('id_sale', $id)->delete();
+    }
+
+
+    public function sendBudgetToCart($budgetId, $idUser)
+    {
+        DB::beginTransaction();
+        try {
+            $itens = ItensOnBudget::where('id_sale', $budgetId)->get();
+
+            if ($this->saveItensOnCart($itens, $idUser)) {
+                $this->dropProductsPerBudget($budgetId);
+                $this->destroy($budgetId);
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -166,6 +215,16 @@ class BudgetController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Attempt to delete the budget by its ID
+        $result = Budget::destroy($id);
+
+        // Check if the delete operation was successful
+        if ($result) {
+            // Return a success response
+            return response()->json(['message' => 'Budget deleted successfully'], 200);
+        } else {
+            // Return an error response if the budget could not be found or not deleted
+            return response()->json(['message' => 'Budget not found'], 404);
+        }
     }
 }

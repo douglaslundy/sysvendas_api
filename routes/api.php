@@ -65,4 +65,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::apiResource('budgets', BudgetController::class);
     Route::get('budgets/budgetsPerClient/{id_client}', [BudgetController::class, 'budgetsPerClient']);
+    Route::put('budgets/sendBudgetToCart/{id}/{idUser}', [BudgetController::class, 'sendBudgetToCart']);
 });
