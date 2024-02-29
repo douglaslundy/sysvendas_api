@@ -37,10 +37,10 @@ class SaleRequest extends FormRequest
             "type_sale" => ['string', 'required',  Rule::in('in_cash', 'on_term'), new IfExistsClientInSale(request()->input('id_client'))],
             "due_date" => ['date', 'nullable'],
             // "pay_date" => ['date', 'nullable'],
-            "chek" => ['integer', 'nullable'],
-            "cash" => ['integer', 'nullable'],
-            "discount" => ['integer', 'nullable'],
-            "card" => ['integer', 'nullable'],
+            "chek" => ['numeric', 'nullable'],
+            "cash" => ['numeric', 'nullable'],
+            "discount" => ['numeric', 'nullable'],
+            "card" => ['numeric', 'nullable'],
             "total_sale" => [new CheckTotalSale(request()->input("type_sale"), request()->input("check"), request()->input("cash"), request()->input("card"), request()->input("discount")), new CheckIfSaleIsBiggerThanZero()],
         ];
     }

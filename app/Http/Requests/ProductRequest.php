@@ -30,11 +30,11 @@ class ProductRequest extends FormRequest
             'bar_code' => 'required|string|max:50|unique:products,bar_code,'.request()->id,
             'id_unity' => ['required', 'integer'],
             'id_category' => ['required', 'integer'],
-            'cost_value' => ['required', 'integer'],
-            'sale_value' => [new ChekIfValueSaleIsBiggestThanValueCost(request()->input("cost_value")), 'required', 'integer'],
-            'stock' => ['nullable', 'integer'],
+            'cost_value' => ['required', 'numeric'],
+            'sale_value' => [new ChekIfValueSaleIsBiggestThanValueCost(request()->input("cost_value")), 'required', 'numeric'],
+            'stock' => ['nullable', 'numeric'],
             'id_product_stock' => ['integer', 'nullable', new IfAlreadyProductStock],
-            'reason' => ['integer'],
+            'reason' => ['numeric'],
             'active' => ['nullable', 'boolean'],
         ];
     }

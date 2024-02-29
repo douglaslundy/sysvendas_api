@@ -58,7 +58,7 @@ class SaleController extends Controller
             return $product->item_value * $product->qtd;
         });
 
-        return (count($products) == $total_itens) and $total_sale == intval($total / 100) || $total_sale == ceil($total / 100);
+        return (count($products) == $total_itens) and $total_sale == $total || $total_sale == $total;
     }
 
     /**
@@ -258,7 +258,7 @@ class SaleController extends Controller
 
             DB::commit();
 
-            return "O pagamento de $sales vendas no total de R$ " . $payClient / 100 . " foi realizado com sucesso";
+            return "O pagamento de $sales vendas no total de R$ " . $payClient . " foi realizado com sucesso";
         } catch (Exception $e) {
             DB::rollback();
             throw $e;

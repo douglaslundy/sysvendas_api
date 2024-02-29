@@ -28,7 +28,7 @@ class CartRequest extends FormRequest
         return [
             "id_user" => ['integer', 'required', new IfInUsers],
             "id_product" => ['integer', 'required', new  IfInProducts],
-            "qtd" => ['integer', 'required'],
+            "qtd" => ['numeric', 'required'],
             'obs' => 'string|max:50|nullable'
         ];
     }

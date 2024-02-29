@@ -53,7 +53,7 @@ class CartController extends Controller
         $array = ['status' => 'created'];
 
         if (Cart::where('id_product', $cart['id_product'])->where('id_user', $cart['id_user'])->first()) {
-            $existedCart = Cart::where('id_product', $cart['id_product'])->where('id_user', $cart['id_user'])->first();
+            $existedCart = Cart::with(['product'])->where('id_product', $cart['id_product'])->where('id_user', $cart['id_user'])->first();
             $existedCart->qtd += $cart['qtd'];
             $existedCart->save();
             $array['cart'] = $existedCart;
@@ -93,7 +93,7 @@ class CartController extends Controller
             throw new Exception('Este produto não possui estoque cadastrado');
 
         $array = ['status' => 'updated'];
-        $cart = Cart::where('id', $id)->first();
+        $cart = Cart::with(['product'])->where('id', $id)->first();
 
         // throw new Exception($cart->qtd);
         // throw new Exception($cart['product']['reason']);

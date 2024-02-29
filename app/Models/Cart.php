@@ -20,6 +20,6 @@ class Cart extends Model
 
     public function product()
     {
-        return $this->hasOne(Product::class, 'id', 'id_product');
+        return $this->hasOne(Product::class, 'id', 'id_product')->with(['unity']);
     }
 }
