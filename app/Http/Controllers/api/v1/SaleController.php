@@ -235,11 +235,16 @@ class SaleController extends Controller
         try {
             $sales = Sale::whereIn('id', $request->id_sales)
                 ->where('id_client', $request->id_client)
+                ->where('type_sale', 'on_term')
                 ->where('paied', 'no')
                 ->lockForUpdate()
                 ->update(['paied' => 'yes']);
 
-            if ($sales) {
+            if ($sales <= 0) {
+                throw new Exception("Erro ao processar o pagamento ");
+            };
+
+            if ($sales > 0) {
                 $payClient = Sale::whereIn('id', $request->id_sales)
                     ->where('id_client', $request->id_client)
                     ->where('paied', 'yes')
@@ -255,13 +260,12 @@ class SaleController extends Controller
                     $client->update();
                 }
             }
-
             DB::commit();
-
             return "O pagamento de $sales vendas no total de R$ " . $payClient . " foi realizado com sucesso";
+
         } catch (Exception $e) {
             DB::rollback();
-            throw $e;
+            return "Erro ao processar o pagamento: " . $e->getMessage();
         }
     }
 
