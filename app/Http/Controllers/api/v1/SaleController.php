@@ -233,12 +233,24 @@ class SaleController extends Controller
         DB::beginTransaction();
 
         try {
+
+            // Primeiro, calculamos a soma total das vendas especificadas em $request->id_sales
+            $totalSales = Sale::whereIn('id', $request->id_sales)
+                ->where('id_client', $request->id_client)
+                ->where('type_sale', 'on_term')
+                ->where('paied', 'no')
+                ->sum('total_sale');
+
+            // Em seguida, você pode usar o valor de $totalSales para calcular o desconto
             $sales = Sale::whereIn('id', $request->id_sales)
                 ->where('id_client', $request->id_client)
                 ->where('type_sale', 'on_term')
                 ->where('paied', 'no')
                 ->lockForUpdate()
-                ->update(['paied' => 'yes']);
+                ->update([
+                    'paied' => 'yes',
+                    'discount' => db::raw('total_sale * ' . ($request->discount / $totalSales))
+                ]);
 
             if ($sales <= 0) {
                 throw new Exception("Erro ao processar o pagamento ");
@@ -262,7 +274,6 @@ class SaleController extends Controller
             }
             DB::commit();
             return "O pagamento de $sales vendas no total de R$ " . $payClient . " foi realizado com sucesso";
-
         } catch (Exception $e) {
             DB::rollback();
             return "Erro ao processar o pagamento: " . $e->getMessage();
