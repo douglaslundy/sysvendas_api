@@ -260,7 +260,7 @@ class SaleController extends Controller
                 $payClient = Sale::whereIn('id', $request->id_sales)
                     ->where('id_client', $request->id_client)
                     ->where('paied', 'yes')
-                    ->sum(DB::raw('total_sale - discount'));
+                    ->sum(DB::raw('total_sale'));
 
                 $client = Client::where('id', $request->id_client)
                     ->lockForUpdate()
