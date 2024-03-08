@@ -49,6 +49,7 @@ class SaleController extends Controller
         return $query->with(['itens', 'client', 'user'])->orderBy('id', 'desc')->get();
     }
 
+
     // verifica se o request recebido do front esta atualizado com valor existente em banco
     public function checkIfSaleIsUpdatedWithCart($idUser, $total_sale, $total_itens)
     {
@@ -58,7 +59,12 @@ class SaleController extends Controller
             return $product->item_value * $product->qtd;
         });
 
-        return (count($products) == $total_itens) and $total_sale == $total || $total_sale == $total;
+        // estava ocorrendo um erro quando o total da venda possuia mais de 2 casas decimais, exemplo
+        // um produto com preço de venda de R$ 728,88 inserido no carrinho na quantidade de 0,080 retornava o total de 58.3104, e não passava na validação, pos o valor enviado do front era 58.31
+        // sendo assim, considerando que a função ceil arredonda para cima retornando 58.31, enquanto o floor arredonda para baixo etornando 58.31
+        // foi inserindo um condicional, testando se o total da venda vindo do backand é referente ao valor arredondado para cima ou para baixo, em qualquer uma das situações, o teste password_hash
+        
+        return (count($products) == $total_itens) and $total_sale == (ceil($total * 100) / 100) || $total_sale == (floor($total * 100) / 100);
     }
 
     /**
