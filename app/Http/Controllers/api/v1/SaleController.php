@@ -63,7 +63,7 @@ class SaleController extends Controller
         // um produto com preço de venda de R$ 728,88 inserido no carrinho na quantidade de 0,080 retornava o total de 58.3104, e não passava na validação, pos o valor enviado do front era 58.31
         // sendo assim, considerando que a função ceil arredonda para cima retornando 58.31, enquanto o floor arredonda para baixo etornando 58.31
         // foi inserindo um condicional, testando se o total da venda vindo do backand é referente ao valor arredondado para cima ou para baixo, em qualquer uma das situações, o teste password_hash
-        
+
         return (count($products) == $total_itens) and $total_sale == (ceil($total * 100) / 100) || $total_sale == (floor($total * 100) / 100);
     }
 
@@ -247,16 +247,32 @@ class SaleController extends Controller
                 ->where('paied', 'no')
                 ->sum('total_sale');
 
-            // Em seguida, você pode usar o valor de $totalSales para calcular o desconto
-            $sales = Sale::whereIn('id', $request->id_sales)
+            // Primeiro, obtenha o número de vendas que correspondem aos critérios
+            $QtdSales = Sale::whereIn('id', $request->id_sales)
                 ->where('id_client', $request->id_client)
                 ->where('type_sale', 'on_term')
                 ->where('paied', 'no')
-                ->lockForUpdate()
-                ->update([
-                    'paied' => 'yes',
-                    'discount' => db::raw('total_sale * ' . ($request->discount / $totalSales))
-                ]);
+                ->count();
+
+            // Agora, você pode usar $salesCount para dividir o valor de cash
+            // Certifique-se de que $salesCount não é zero para evitar divisão por zero
+            // Em seguida, você pode usar o valor de $totalSales para calcular o desconto
+            if ($QtdSales > 0) {
+                $sales = Sale::whereIn('id', $request->id_sales)
+                    ->where('id_client', $request->id_client)
+                    ->where('type_sale', 'on_term')
+                    ->where('paied', 'no')
+                    ->lockForUpdate()
+                    ->update([
+                        'paied' => 'yes',
+                        'discount' => db::raw('total_sale * ' . ($request->discount / $totalSales)),
+                        'cash' => db::raw(($request->cash / $QtdSales)),
+                        'card' => db::raw(($request->card / $QtdSales)),
+                        'check' => db::raw(($request->check / $QtdSales))
+                    ]);
+            } else {
+                throw new Exception("Não foi encontrado nenhuma venda com os parametros passados! ");
+            }
 
             if ($sales <= 0) {
                 throw new Exception("Erro ao processar o pagamento ");
