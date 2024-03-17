@@ -13,13 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('itens_on_sale', function (Blueprint $table) {
-            $table->id();
-            $table->integer('id_sale');
-            $table->integer('id_user');
-            $table->integer('id_product');
-            $table->decimal('qtd', 10, 2)->default(1);
-            $table->decimal('item_value', 10, 2)->default(0);
+        Schema::table('itens_on_sale', function (Blueprint $table) {
+            $table->decimal('cost_value', 10, 2)->after('qtd')->default(0);
         });
     }
 
@@ -30,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('itens_sale');
+        Schema::table('itens_on_sale', function (Blueprint $table) {
+            $table->dropColumn('cost_value');
+        });
     }
 };

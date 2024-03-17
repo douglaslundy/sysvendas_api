@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('obs', 500)->nullable();
             $table->boolean('active')->nullable()->default(1);
             $table->timestamp('inactive_date')->nullable();
-            $table->integer('debit_balance')->nullable()->default(0);
-            $table->integer('limit')->nullable()->default(0);
+            $table->decimal('debit_balance', 10, 2)->nullable()->default(0);
+            $table->decimal('limit', 10, 2)->nullable()->default(0);
             $table->boolean('marked')->nullable()->default(0);
         });
     }

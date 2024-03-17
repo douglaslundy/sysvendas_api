@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->integer('reason')->nullable()->after('stock')->default(100);
+            $table->decimal('reason', 10, 3)->nullable()->after('stock')->default(100);
         });
     }
 

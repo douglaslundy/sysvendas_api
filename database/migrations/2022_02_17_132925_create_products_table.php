@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('bar_code', 50)->unique();
             $table->integer('id_unity');
             $table->integer('id_category');
-            $table->integer('cost_value')->default(0);
-            $table->integer('sale_value')->default(0);
-            $table->bigInteger('stock')->default(0);
+            $table->decimal('cost_value', 10, 2)->default(0);
+            $table->decimal('sale_value', 10, 2)->default(0);
+            $table->decimal('stock', 10, 3)->default(0);
             $table->boolean('active')->default(1);
         });
     }

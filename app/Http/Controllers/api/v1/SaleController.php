@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Sale;
 use App\Models\Cart;
 use App\Models\ItensOnSale;
-
+use App\Models\Product;
 use App\Http\Requests\SaleRequest;
 use App\Models\Budget;
 use App\Models\Client;
@@ -194,13 +194,17 @@ class SaleController extends Controller
 
     public function saveItensOnSale($products, $saleId, $userId)
     {
+        
         foreach ($products as $product) {
+            $costValue = Product::where('id', $product->id_product)->value('cost_value');
+
             $item = new ItensOnSale();
             $item->id_sale = $saleId;
             $item->id_user = $userId;
             $item->id_product = $product->id_product;
             $item->qtd = $product->qtd;
             $item->obs = $product->obs;
+            $item->cost_value = $costValue;
             $item->item_value = $product->item_value;
             $item->save();
         }

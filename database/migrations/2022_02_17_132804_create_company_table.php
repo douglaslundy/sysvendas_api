@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('cnpj_cpj', 18)->unique()->nullable();
             $table->string('ie', 18)->unique()->nullable();
             $table->string('im', 18)->unique()->nullable();
-            $table->integer('balance')->nullable()->default(0);
+            $table->decimal('balance', 10, 2)->nullable()->default(0);
             $table->timestamp('validate')->nullable();
             $table->boolean('active')->nullable()->default(1);
         });

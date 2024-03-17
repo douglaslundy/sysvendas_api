@@ -22,10 +22,10 @@ return new class extends Migration
             $table->enum('type_sale', ['in_cash', 'on_term']);
             $table->timestamp('due_date')->nullable();
             $table->timestamp('pay_date')->nullable();
-            $table->integer('check')->nullable()->default(0);
-            $table->integer('cash')->nullable()->default(0);
-            $table->integer('card')->nullable()->default(0);
-            $table->integer('total_sale')->default(0);
+            $table->decimal('check', 10, 2)->nullable()->default(0);
+            $table->decimal('cash', 10, 2)->nullable()->default(0);
+            $table->decimal('card', 10 , 2)->nullable()->default(0);
+            $table->decimal('total_sale', 10, 2)->default(0);
         });
     }
 

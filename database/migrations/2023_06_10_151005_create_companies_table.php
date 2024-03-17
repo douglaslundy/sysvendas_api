@@ -21,7 +21,7 @@ class CreateCompaniesTable extends Migration
             $table->string('cnpj', 18);
             $table->string('ie', 18)->unique()->nullable();
             $table->string('im', 18)->unique()->nullable();
-            $table->integer('balance')->nullable()->default(0);
+            $table->decimal('balance', 10, 2)->nullable()->default(0);
             $table->string('zip_code', 10)->nullable();
             $table->string('city', 20)->nullable();
             $table->string('street', 50)->nullable();

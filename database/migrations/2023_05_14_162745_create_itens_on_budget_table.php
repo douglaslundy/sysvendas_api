@@ -18,8 +18,8 @@ return new class extends Migration
             $table->integer('id_sale');
             $table->integer('id_user');
             $table->integer('id_product');
-            $table->bigInteger('qtd')->default(1);
-            $table->integer('item_value')->default(0);
+            $table->decimal('qtd', 10, 3)->default(1);
+            $table->decimal('item_value', 10, 2)->default(0);
             $table->string('obs', 200)->nullable();
             $table->timestamps();
         });

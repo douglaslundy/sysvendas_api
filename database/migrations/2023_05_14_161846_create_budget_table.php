@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('id_user');
             $table->integer('id_client')->nullable();
-            $table->integer('total_sale')->default(0);
+            $table->decimal('total_sale', 10, 2)->default(0);
             $table->string('obs', 200)->nullable();
             $table->enum('type_sale', ['budget'])->default('budget');
             $table->timestamps();

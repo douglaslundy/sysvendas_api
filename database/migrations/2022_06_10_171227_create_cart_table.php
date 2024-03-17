@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->integer('id_user');
             $table->integer('id_product');
-            $table->integer('item_value')->default(0);
-            $table->integer('qtd');
+            $table->decimal('item_value', 10, 2)->default(0);
+            $table->decimal('qtd', 10, 2);
         });
     }
 

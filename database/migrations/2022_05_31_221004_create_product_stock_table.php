@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('product_stock', function (Blueprint $table) {
             $table->id();
             $table->integer('id_product');
-            $table->bigInteger('stock')->default(0);
+            $table->decimal('stock', 10, 3)->default(0);
             $table->timestamps();
         });
     }
