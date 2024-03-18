@@ -89,8 +89,13 @@ class SaleController extends Controller
         if (!$this->checkIfSaleIsUpdatedWithCart($request->id_user, $request->total_sale, $request->total_itens))
             throw new Exception('Seu carrinho está desatualizado, por favor feche a pagina, atualize a página (de um F5) e tente novamente!');
 
-        if ($form['type_sale'] == "on_term")
+        // if ($form['type_sale'] == "on_term")
+        //     $form['paied'] = 'no';
+
+        if ($form['type_sale'] == "on_term") {
             $form['paied'] = 'no';
+            $form['discount'] = 0;
+        }
 
         if ($form['type_sale'] == "on_term" && $form['paied'] !== "no")
             throw new Exception('Ocorreu um erro nesta transação, por favor verifique se a mesma foi concluída, se não tente novamente, ou fale com suporte.');
@@ -121,6 +126,7 @@ class SaleController extends Controller
                 throw new Exception('Ocorreu um erro ' . $err);
             } finally {
                 if ($sale->type_sale == "on_term" && $sale->paied == "no") {
+                    // $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
                     $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, 0);
                 }
             }
@@ -194,7 +200,7 @@ class SaleController extends Controller
 
     public function saveItensOnSale($products, $saleId, $userId)
     {
-        
+
         foreach ($products as $product) {
             $costValue = Product::where('id', $product->id_product)->value('cost_value');
 
@@ -317,8 +323,12 @@ class SaleController extends Controller
     {
         $form = $request->all();
 
-        if ($form['type_sale'] == "on_term")
+        // if ($form['type_sale'] == "on_term")
+        //     $form['paied'] = 'no';
+        if ($form['type_sale'] == "on_term") {
             $form['paied'] = 'no';
+            $form['discount'] = 0;
+        }
 
         if ($form['type_sale'] == "on_term" && $form['paied'] !== "no")
             throw new Exception('Ocorreu um erro nesta transação, por favor verifique se a mesma foi concluída, se não tente novamente, ou fale com suporte.');
@@ -350,7 +360,8 @@ class SaleController extends Controller
                 throw new Exception('Ocorreu um erro ' . $err);
             } finally {
                 if ($sale->type_sale == "on_term" && $sale->paied == "no") {
-                    $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
+                    // $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
+                    $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, 0);
                 }
             }
         }, 5);
