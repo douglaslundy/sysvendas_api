@@ -121,7 +121,7 @@ class SaleController extends Controller
                 throw new Exception('Ocorreu um erro ' . $err);
             } finally {
                 if ($sale->type_sale == "on_term" && $sale->paied == "no") {
-                    $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, $sale->discount);
+                    $this->updateDebitBalanceClient($sale->id_client, $sale->total_sale, 0);
                 }
             }
         }, 5);
