@@ -9,6 +9,5 @@ class Categorie extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
     protected $fillable = ['name', 'active'];
 }

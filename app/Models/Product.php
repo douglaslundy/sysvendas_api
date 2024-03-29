@@ -9,7 +9,6 @@ class Product extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
     protected $fillable =
     // ['name', 'bar_code', 'id_unity', 'id_category', 'cost_value', 'sale_value', 'stock','reason', 'active'];
     ['name', 'bar_code', 'id_unity', 'id_category', 'cost_value', 'sale_value', 'reason', 'id_product_stock', 'active'];

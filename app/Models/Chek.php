@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Chek extends Model
 {
     use HasFactory;
-    public $timestamps = false;
     protected $fillable = [
         'cpf_cnpj_chek',
         'check_number',

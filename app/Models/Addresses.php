@@ -9,7 +9,6 @@ class Addresses extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
     protected $hidden =['id_client'];
     protected $fillable = [
         'city',
