@@ -34,7 +34,9 @@ class CheckTotalSale implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $this->type_sale == 'in_cash' ? (($value - $this->discount) <= ($this->check + $this->cash + $this->card)) : true;
+        // return $this->type_sale == 'in_cash' ? (($value - $this->discount) <= ($this->check + $this->cash + $this->card)) : true;
+        // a função de arredondamento ceil evita erros de arredondamento
+        return $this->type_sale == 'in_cash' ? (ceil(($value - $this->discount)) <= ceil(($this->check + $this->cash + $this->card))) : true;
     }
 
     /**
