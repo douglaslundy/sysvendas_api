@@ -64,7 +64,7 @@ class SaleController extends Controller
         // sendo assim, considerando que a função ceil arredonda para cima retornando 58.31, enquanto o floor arredonda para baixo etornando 58.31
         // foi inserindo um condicional, testando se o total da venda vindo do backand é referente ao valor arredondado para cima ou para baixo, em qualquer uma das situações, o teste password_hash
 
-        return (count($products) == $total_itens) and $total_sale == (ceil($total * 100) / 100) || $total_sale == (floor($total * 100) / 100);
+        return (count($products) == $total_itens) and $total_sale == (ceil($total * 100) / 100) || $total_sale == (floor($total * 100) / 100) || round($total_sale) == round($total);
     }
 
     /**
@@ -264,6 +264,8 @@ class SaleController extends Controller
                 ->where('paied', 'no')
                 ->count();
 
+                // $QtdSales = 0;
+
             // Agora, você pode usar $salesCount para dividir o valor de cash
             // Certifique-se de que $salesCount não é zero para evitar divisão por zero
             // Em seguida, você pode usar o valor de $totalSales para calcular o desconto
@@ -308,7 +310,7 @@ class SaleController extends Controller
             return "O pagamento de $sales vendas no total de R$ " . $payClient . " foi realizado com sucesso";
         } catch (Exception $e) {
             DB::rollback();
-            return "Erro ao processar o pagamento: " . $e->getMessage();
+            throw new Exception($e->getMessage());
         }
     }
 
