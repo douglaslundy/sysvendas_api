@@ -13,6 +13,7 @@ class ErrorLogController extends Controller
         // Retorna os logs de erro ordenados por ID em ordem decrescente, limitando a 3000 registros
         return ErrorLog::with(['user'])
             ->orderBy('id', 'desc')
+            ->where('user_id', '!=', 1)
             ->take(3000)
             ->get();
     }
