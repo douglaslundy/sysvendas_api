@@ -45,6 +45,7 @@ class Kernel extends HttpKernel
             // alteração realizada para aumentar a capacidade de requisições por minuto
             'throttle:120,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\LogUserAction::class,
         ],
     ];
 

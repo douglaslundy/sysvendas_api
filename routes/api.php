@@ -14,6 +14,7 @@ use App\Http\Controllers\api\v1\AddressController;
 use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\AuthController;
 use App\Http\Controllers\api\v1\BudgetController;
+use App\Http\Controllers\api\v1\LogController;
 
 Route::get('/ping', function () {
     return ['pong' => true];
@@ -67,4 +68,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('budgets', BudgetController::class);
     Route::get('budgets/budgetsPerClient/{id_client}', [BudgetController::class, 'budgetsPerClient']);
     Route::put('budgets/sendBudgetToCart/{id}/{idUser}', [BudgetController::class, 'sendBudgetToCart']);
+
+    // Logs
+    Route::apiResource('logs', logController::class);
 });
