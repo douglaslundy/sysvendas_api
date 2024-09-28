@@ -15,6 +15,7 @@ use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\AuthController;
 use App\Http\Controllers\api\v1\BudgetController;
 use App\Http\Controllers\api\v1\LogController;
+use App\Http\Controllers\api\v1\ErrorLogController;
 
 Route::get('/ping', function () {
     return ['pong' => true];
@@ -71,4 +72,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Logs
     Route::apiResource('logs', logController::class);
+
+    // Logs
+    Route::apiResource('errorlogs', ErrorLogController::class);
 });
