@@ -29,7 +29,8 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response([
-                'message' => 'Usuario ou senha Inválidos'
+                // 'message' => 'Usuario ou senha Inválidos'
+                 'message' => "Sua licença para uso deste software expirou!\nSolicite uma nova licença para continuar utilizando o sistema através do WhatsApp: (35) 98429-7193."
             ], 401);
         }
         $token = $user->createToken('token')->plainTextToken;
